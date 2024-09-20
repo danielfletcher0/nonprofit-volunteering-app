@@ -6,6 +6,8 @@ import Login from "./pages/auth/Login";
 import UserRegistration from "./pages/auth/Register";
 import EventCreation from "./pages/event/event";
 import Profile from "./pages/auth/profile";
+import VolunteerHistory from "./pages/history/history";
+import VolunteerMatching from "./pages/match/match";
 
 const App = () => (
     <Router>
@@ -29,6 +31,15 @@ const App = () => (
                     <li>
                         <Link to="/profile">Profile</Link>
                     </li>
+
+                    <li>
+                        <Link to="/history">Volunteer History</Link>
+                    </li>
+
+                    <li>
+                        <Link to="/match">Volunteer Matching</Link>
+                    </li>
+
                 </ul>
             </nav>
         </div>
@@ -39,6 +50,8 @@ const App = () => (
             <Route path="/signup" element={<UserRegistration />} />
             <Route path='/create' element={<EventCreation />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<VolunteerHistory />} />
+            <Route path="/match" element={<VolunteerMatching />} />
         </Routes>
     </Router>
 );
