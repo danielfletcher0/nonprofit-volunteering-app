@@ -256,7 +256,7 @@ function Profile() {
             <ul>
               {formData.skills.map((skill) => (
                 <li key={skill}>
-                  {skill}<button type="button" onClick={() => removeDateInput(index)} className="text-red-600 hover:text-red-500 font-medium">  Remove</button>
+                  {skill}<button type="button" onClick={() => handleRemoveSkill(skill)} className="text-red-600 hover:text-red-500 font-medium">  Remove</button>
                 </li>
               ))}
             </ul>
