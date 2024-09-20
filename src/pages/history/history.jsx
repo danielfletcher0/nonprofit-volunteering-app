@@ -83,7 +83,10 @@ const VolunteerHistory = () => {
 
     return (
         <div className="container">
-            <h1>View Volunteer History</h1>
+            <head>
+                <link rel="stylesheet" href="history.css"></link>
+                <title>Volunteer History</title>
+            </head>
 
             <div className="form-group">
                 <label htmlFor="volunteer-name">Volunteer Name:</label>
