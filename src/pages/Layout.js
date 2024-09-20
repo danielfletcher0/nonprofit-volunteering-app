@@ -9,7 +9,7 @@ const Layout = () => {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
-                        <Link to="/Login">Login</Link>
+                        <Link to="/signup">Login</Link>
                     </li>
                 </ul>
             </nav>
