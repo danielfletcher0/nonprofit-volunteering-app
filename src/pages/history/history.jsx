@@ -1,57 +1,44 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./history.css";
-import React from 'react';
-
-const volunteerData = {
-    "John Doe": [
-        { name: "Beach Cleanup", description: "Cleaning up the beach to promote a cleaner environment.", location: "California Beach", skills: "Teamwork, Physical fitness", date: "2023-06-15" },
-        { name: "Food Drive", description: "Collecting food donations for local shelters.", location: "Community Center", skills: "Organizational skills, Communication", date: "2023-07-20" }
-    ],
-    "Jane Smith": [], // No participation
-    "Alice Johnson": [
-        { name: "Park Renovation", description: "Renovating the local park with new facilities.", location: "Central Park", skills: "Landscaping, Painting", date: "2023-08-10" }
-    ],
-};
 
 const VolunteerHistory = () => {
+    const volunteerData = {
+        "John Doe": [
+            { name: "Beach Cleanup", description: "Cleaning up the beach to promote a cleaner environment.", location: "California Beach", skills: "Teamwork, Physical fitness", date: "2023-06-15" },
+            { name: "Food Drive", description: "Collecting food donations for local shelters.", location: "Community Center", skills: "Organizational skills, Communication", date: "2023-07-20" }
+        ],
+        "Jane Smith": [], // No participation
+        "Alice Johnson": [
+            { name: "Park Renovation", description: "Renovating the local park with new facilities.", location: "Central Park", skills: "Landscaping, Painting", date: "2023-08-10" }
+        ],
+    };
+
     const [selectedVolunteer, setSelectedVolunteer] = useState("");
-    const [historyDisplay, setHistoryDisplay] = useState(null);
+    const [suggestions, setSuggestions] = useState([]);
+    const [historyDisplay, setHistoryDisplay] = useState("");
 
     const showSuggestions = (value) => {
         const matches = Object.keys(volunteerData).filter(name => name.toLowerCase().includes(value.toLowerCase()));
-        const suggestions = matches.map(name => (
-            <div key={name} className='suggestion-item' onClick={() => selectVolunteer(name)}>
-                {name}
-            </div>
-        ));
-
-        return suggestions.length > 0 ? suggestions : <div>No suggestions</div>;
+        setSuggestions(matches);
     };
 
     const selectVolunteer = (volunteer) => {
         setSelectedVolunteer(volunteer);
-        setHistoryDisplay(null); // Reset history display
+        document.getElementById('volunteer-name').value = volunteer; // Fill input with the selected name
+        setSuggestions([]); // Clear suggestions
+        document.getElementById('view-history').disabled = false;
     };
 
     const viewHistory = () => {
         if (selectedVolunteer) {
             const historyItems = volunteerData[selectedVolunteer];
 
-            if (historyItems.length === 0) {
-                setHistoryDisplay(
-                    <div>
-                        <h2>History for {selectedVolunteer}</h2>
-                        <p>No participation history found.</p>
-                    </div>
-                );
-                return;
-            }
-
-            setHistoryDisplay(
-                <div>
-                    <h2>History for {selectedVolunteer}</h2>
-                    <table>
+            if (historyItems) {
+                if (historyItems.length === 0) {
+                    setHistoryDisplay(`<h2>History for ${selectedVolunteer}</h2><p>No participation history found.</p>`);
+                } else {
+                    let tableHTML = `<h2>History for ${selectedVolunteer}</h2><table>
                         <thead>
                             <tr>
                                 <th>Event Name</th>
@@ -61,47 +48,77 @@ const VolunteerHistory = () => {
                                 <th>Event Date</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {historyItems.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.name}</td>
-                                    <td>{item.description}</td>
-                                    <td>{item.location}</td>
-                                    <td>{item.skills}</td>
-                                    <td>{item.date}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            );
+                        <tbody>`;
+
+                    historyItems.forEach(item => {
+                        tableHTML += `<tr>
+                            <td>${item.name}</td>
+                            <td>${item.description}</td>
+                            <td>${item.location}</td>
+                            <td>${item.skills}</td>
+                            <td>${item.date}</td>
+                        </tr>`;
+                    });
+
+                    tableHTML += `</tbody></table>`;
+                    setHistoryDisplay(tableHTML);
+                }
+            } else {
+                setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
+            }
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            const inputValue = e.target.value;
+            if (inputValue in volunteerData) {
+                selectVolunteer(inputValue);
+                viewHistory();
+            } else {
+                setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
+            }
         }
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>View Volunteer History</h1>
+
             <div className="form-group">
                 <label htmlFor="volunteer-name">Volunteer Name:</label>
                 <input
                     type="text"
                     id="volunteer-name"
-                    onInput={e => {
-                        setHistoryDisplay(null); // Reset display
+                    onInput={(e) => {
                         showSuggestions(e.target.value);
                     }}
-                    placeholder="Type a name"
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type a name (e.g., John Doe, Jane Smith, Alice Johnson)"
                 />
                 <div id="suggestions" className="suggestions">
-                    {showSuggestions(document.getElementById('volunteer-name')?.value || "")}
+                    {suggestions.map((name) => (
+                        <div key={name} className="suggestion-item" onClick={() => selectVolunteer(name)}>
+                            {name}
+                        </div>
+                    ))}
                 </div>
             </div>
-            <button id="view-history" style={{ marginTop: '1rem' }} onClick={viewHistory} disabled={!selectedVolunteer}>
+
+            <button
+                id="view-history"
+                style={{ marginTop: '1rem' }}
+                onClick={viewHistory}
+                disabled={!selectedVolunteer}
+            >
                 View History
             </button>
-            <div id="history-display" style={{ marginTop: '2rem' }}>
-                {historyDisplay}
-            </div>
+
+            <div
+                id="history-display"
+                style={{ marginTop: '2rem' }}
+                dangerouslySetInnerHTML={{ __html: historyDisplay }}
+            />
         </div>
     );
 };
