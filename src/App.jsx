@@ -5,7 +5,7 @@ import About from "./components/About";
 import Login from "./pages/auth/Login";
 import UserRegistration from "./pages/auth/Register";
 import EventCreation from "./pages/event/event";
-import Profile from "./pages/auth/profile";
+import Profile from "./pages/auth/Profile";
 import VolunteerHistory from "./pages/history/history";
 import VolunteerMatching from "./pages/match/match";
 
