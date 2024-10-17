@@ -6,7 +6,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Import your route files
-const eventRouter = require('./routes/eventRouter');
+const eventRouter = require('./routes/eventRouter.js');
 const historyRouter = require('./routes/historyRouter');
 const homeRouter = require('./routes/homeRouter');
 const loginRouter = require('./routes/LoginRouter');
