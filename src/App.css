@@ -1,24 +1,76 @@
-.App {
-    text-align: center;
+body {
+    font-family: Arial, sans-serif; /* Use a clean font */
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Light background for contrast */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+nav {
+    background-color: #ffffff; /* White background */
+    padding: 15px; /* Space around the navigation */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Drop shadow for depth */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+nav ul {
+    list-style: none; /* Remove bullet points */
+    display: flex; /* Horizontal layout */
+    justify-content: flex-start; /* Align items to the left */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    margin-left: 60px; /* Add margin to the left for spacing (adjust as needed) */
+
 }
 
-.App-link {
-    color: #61dafb;
+nav li {
+    margin: 0 15px; /* Space between items */
+}
+
+nav a {
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Dark text color */
+    font-weight: bold; /* Make text bold */
+    padding: 10px 15px; /* Padding for clickable area */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+nav a:hover,
+nav a.active {
+    background-color: #C19A6B; /* Tan color for hover and active */
+    color: #fff; /* White text color on hover */
+    border-radius: 5px; /* Rounded corners on hover */
+}
+
+.header {
+    text-align: center; /* Center the logo and title */
+    padding: 20px;
+}
+
+.header-title {
+    margin: 0; /* Remove default margin */
+    color: #ff0000; /* Change color to black */
+    font-size: 1.7em; /* Font size */
+    line-height: 1.2; /* Adjust line height if needed */
+    font-weight: bold; /* Make the text bold */
+}
+
+.logo {
+    width: 80px; /* Set a width for the logo */
+    margin-bottom: 10px; /* Space below the logo */
+}
+
+/* Optional: Style for main content */
+.main-content {
+    padding: 20px; /* Space around the content */
+}
+
+.page-container {
+    padding-top: 0px; /* Adjust based on your navbar height */
+}
+
+nav a.active {
+    background-color: #C19A6B; /* Tan color for active */
+    color: #fff; /* White text color on active */
+    border-radius: 5px; /* Rounded corners for active */
 }

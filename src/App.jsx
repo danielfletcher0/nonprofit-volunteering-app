@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
 import Login from "./pages/auth/Login";
@@ -8,51 +8,53 @@ import EventCreation from "./pages/event/event";
 import Profile from "./pages/auth/Profile";
 import VolunteerHistory from "./pages/history/history";
 import VolunteerMatching from "./pages/match/match";
+import './App.css';
 
 const App = () => (
     <Router>
-        <div>
+        <div className="page-container">
             <nav>
+                <img 
+                    src="/logo.png" 
+                    alt="CougarCare Logo" 
+                    className="logo" 
+                />
+                <h1 className="header-title">CougarCare</h1>
                 <ul>
                     <li>
-                        <Link to="/">Home</Link>
+                        <NavLink to="/" activeClassName="active">Home</NavLink>
                     </li>
                     <li>
-                        <Link to="/about">About</Link>
+                        <NavLink to="/about" activeClassName="active">About</NavLink>
                     </li>
                     <li>
-                        <Link to="/login">Login</Link>
+                        <NavLink to="/login" activeClassName="active">Login</NavLink>
                     </li>
-
                     <li>
-                        <Link to ='/create'>Create New Event</Link>
+                        <NavLink to="/create" activeClassName="active">Create New Event</NavLink>
                     </li>
-
                     <li>
-                        <Link to="/profile">Profile</Link>
+                        <NavLink to="/profile" activeClassName="active">Profile</NavLink>
                     </li>
-
                     <li>
-                        <Link to="/history">Volunteer History</Link>
+                        <NavLink to="/history" activeClassName="active">Volunteer History</NavLink>
                     </li>
-
                     <li>
-                        <Link to="/match">Volunteer Matching</Link>
+                        <NavLink to="/match" activeClassName="active">Volunteer Matching</NavLink>
                     </li>
-
                 </ul>
             </nav>
+            <Routes>
+                <Route exact path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<UserRegistration />} />
+                <Route path="/create" element={<EventCreation />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/history" element={<VolunteerHistory />} />
+                <Route path="/match" element={<VolunteerMatching />} />
+            </Routes>
         </div>
-        <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<UserRegistration />} />
-            <Route path='/create' element={<EventCreation />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/history" element={<VolunteerHistory />} />
-            <Route path="/match" element={<VolunteerMatching />} />
-        </Routes>
     </Router>
 );
 

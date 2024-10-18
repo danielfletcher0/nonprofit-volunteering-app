@@ -14,6 +14,11 @@ const EventCreation = () =>
 <body>
     <div class="container">
         <form id="event-matching-form">
+            {/* Title Section */}
+            <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', textAlign: 'center' }}>
+                <h1 className="text-4xl font-bold">Create New Event</h1>
+            </div>
+
             <div class="form-group">
                 <label for="event-name">Event Type:</label>
                 <input type="text" id="event-name" name="event-name" maxlength="100"></input>

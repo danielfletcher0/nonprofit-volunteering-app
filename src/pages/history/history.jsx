@@ -4,7 +4,7 @@ import "./history.css";
 
 const VolunteerHistory = () => {
     const volunteerData = {
-        "John Doe": [
+        "John Doe": [  
             { name: "Beach Cleanup", description: "Cleaning up the beach to promote a cleaner environment.", location: "California Beach", skills: "Teamwork, Physical fitness", date: "2023-06-15" },
             { name: "Food Drive", description: "Collecting food donations for local shelters.", location: "Community Center", skills: "Organizational skills, Communication", date: "2023-07-20" }
         ],
@@ -87,6 +87,11 @@ const VolunteerHistory = () => {
                 <link rel="stylesheet" href="history.css"></link>
                 <title>Volunteer History</title>
             </head>
+
+            {/* Title Section */}
+            <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', textAlign: 'center' }}>
+                <h1 className="text-4xl font-bold">Volunteer History</h1>
+            </div>
 
             <div className="form-group">
                 <label htmlFor="volunteer-name">Volunteer Name:</label>

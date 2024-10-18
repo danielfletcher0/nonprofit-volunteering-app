@@ -11,18 +11,20 @@ h1 {
 
 .container {
     max-width: 800px; /* Center the container */
-    margin: 0 auto; /* Center align */
+    margin: 40px auto; /* Add top margin and center align */
     background-color: #fff; /* White background for the container */
     padding: 20px; /* Add some padding */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
+/* Form Group Styles */
 .form-group {
     position: relative; /* Needed for absolute positioning of suggestions */
     margin-bottom: 1.5rem;
 }
 
+/* Input and Select Styles */
 input[type="text"] {
     padding: 10px;
     width: 100%;
@@ -51,11 +53,12 @@ input[type="text"] {
     background-color: #e0e0e0; /* Slightly darker on hover */
 }
 
+/* Button Styles */
 button {
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
-    background-color: #007bff; /* Blue background */
+    background-color: #ff0000; /* Blue background */
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -63,9 +66,10 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #ff0000; /* Darker blue on hover */
 }
 
+/* Table Styles */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -84,4 +88,17 @@ th {
 
 #history-display {
     margin-top: 2rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    .container {
+        margin: 20px auto; /* Less space on smaller screens */
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+
+    input[type="text"],
+    button {
+        padding: 8px; /* Adjust padding for smaller screens */
+    }
 }

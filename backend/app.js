@@ -4,27 +4,28 @@ const cors = require('cors');
 const app = express();
 
 
-app.use(cors());
+const app = express();
+app.use(cors()); // Enable CORS
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());  // Parse incoming JSON data
 app.use(bodyParser.json());
 
 // Import your route files
 const eventRouter = require('./routes/eventRouter');
-const profileRouter = require('./routes/ProfileRouter');
 //const historyRouter = require('./routes/historyRouter');
 //const homeRouter = require('./routes/homeRouter');
 //const loginRouter = require('./routes/LoginRouter');
-//const matchRouter = require('./routes/matchRouter');
+const matchRouter = require('./routes/matchRouter');
+const profileRouter = require('./routes/ProfileRouter');
 //const registerRouter = require('./routes/RegisterRouter');
 
 // Use the routers and define their base paths
 app.use('/events', eventRouter);  
-app.use('/profile', profileRouter); 
 //app.use('/history', historyRouter); 
 //app.use('/home', homeRouter); 
 //app.use('/login', loginRouter); 
-//app.use('/match', matchRouter);
+app.use('/match', matchRouter);
+app.use('/profile', profileRouter); 
 //app.use('/register', registerRouter); 
 
 const PORT = 4000;

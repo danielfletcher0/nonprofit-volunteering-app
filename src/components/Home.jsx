@@ -1,17 +1,18 @@
 import React from "react";
+import '../index.css'; // Ensure this is the correct path
 
 const Home = () => (
-    <div>
+    <div className="home-layout"> {/* Apply the new class here */}
         <h1 className="text-center">Home Page</h1>
 
-        <div class="container">
+        <div className="container">
             <h1>
                 Welcome to the website's Home Page!
-                <br></br>
+                <br />
                 Edit main.jsx to edit HTML on the home page
-                <br></br>
+                <br />
                 Edit index.css to style this
-                <br></br>
+                <br />
                 Base Root is in SRC
             </h1>
         </div>
