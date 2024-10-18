@@ -7,4 +7,16 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Hello this is a test
+To Run:
+npm install 
+npm install react-router-dom
+npm run dev
+
+backend:
+npm install
+npm install nodemon
+npm isntall cors
+npm run dev or node app.js
+
+
+Will try to make frontend and backend run concurrently.
