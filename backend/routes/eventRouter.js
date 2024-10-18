@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/events',(req, res) => {
+router.get('/',(req, res) => {
     const str = [{
         "name": "Foo Bar",
         "event": "Tester"

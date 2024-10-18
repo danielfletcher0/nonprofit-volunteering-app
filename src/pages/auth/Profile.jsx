@@ -153,14 +153,30 @@ function Profile() {
     });
   };
  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      // Form is valid, proceed with further actions (e.g., API call)
-      console.log('Form Data:', formData);
+ const handleSubmit = (e) => {
+  e.preventDefault(); // Prevent default form submission
+
+  if (validateForm()) {
+    // If the form is valid, make a POST request to the backend
+    fetch('http://localhost:4000/profile/submitProfile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData), // Send the form data as JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Response from server:', data);
       alert('Profile submitted successfully!');
-    }
-  };
+    })
+    .catch(error => {
+      console.error('Error submitting profile:', error);
+      alert('Failed to submit profile.');
+    });
+  }
+};
+
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
