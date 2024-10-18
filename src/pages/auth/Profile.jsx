@@ -164,7 +164,9 @@ function Profile() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h1 className="text-4xl font-bold">Complete Your Profile</h1>
+      <div className="text-center">
+    <h1 className="text-4xl font-bold">Complete Your Profile</h1>
+      </div>
         <br></br>
         <br></br>
       <form onSubmit={handleSubmit}>
@@ -307,9 +309,9 @@ function Profile() {
 
 
         <br></br>
-        <button className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
-            Submit Profile
-          </button>
+        <button className="w-full px-4 py-2 text-white font-medium bg-red-600 hover:bg-red-500 active:bg-red-700 rounded-lg duration-150">
+    Submit Profile
+</button>
         </form>
       </div>
   );

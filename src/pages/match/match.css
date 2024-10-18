@@ -1,65 +1,209 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
+/* match.css */
 
+/* Reset some default styles */
 .container {
-    width: 100%;
-    max-width: 800px;
-    margin: 2rem auto;
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Limit container width */
+    margin: 40px auto 0; /* Center container and add top margin */
+    padding: 20px; /* Padding around content */
+    font-family: Arial, sans-serif; /* Clean font */
 }
 
-h1 {
-    margin-bottom: 1rem;
-    font-size: 24px;
-    color: #333;
-}
-
+/* Form Group Styles */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px; /* Space between form groups */
 }
 
-label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 0.5rem;
-    color: #666;
-}
-
+/* Input and Select Styles */
 input[type="text"],
 select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 1px solid #ccc; /* Custom border */
+    padding: 10px; /* Padding for better appearance */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding in width */
+    background-color: white; /* White background */
+    margin-bottom: 10px; /* Space between elements */
+    border-radius: 4px; /* Rounded corners */
+    transition: border-color 0.3s; /* Transition for border color */
 }
 
-input[type="text"][disabled] {
-    background-color: #f9f9f9;
+input:focus,
+select:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #007BFF; /* Change border color on focus */
 }
 
+/* Button Styles */
 button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: #ff0000; /* Custom button color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    padding: 10px 15px; /* Padding for the button */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #b30000; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
-form {
-    margin-top: 2rem; /* Ensure top margin on the form */
+/* Suggestions Dropdown */
+.volunteer-matching {
+    position: relative; /* Ensures dropdown is positioned correctly */
+}
+
+.suggestions-dropdown {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #007BFF; /* Use primary color */
+    background: #fff;
+    position: absolute;
+    z-index: 1000; /* Increased for better visibility */
+    width: 100%;
+    max-height: 200px; /* Limit dropdown height */
+    overflow-y: auto; /* Enable scrolling for overflow */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Match button shadow */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in; /* Fade-in effect */
+}
+
+.suggestions-dropdown.show {
+    opacity: 1; /* Show dropdown */
+}
+
+.suggestions-dropdown li {
+    padding: 10px; /* Padding for list items */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.suggestions-dropdown li:hover {
+    background-color: #e9f7ff; /* Light blue on hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+/* Error and Success Messages */
+.error-message {
+    color: red; /* Red for errors */
+    margin: 10px 0; /* Margin for spacing */
+}
+
+
+/* Success Popup Styles */
+.success-popup {
+    position: fixed; /* Position fixed to stay on screen */
+    top: 20%; /* Position it near the top */
+    left: 50%; /* Center it horizontally */
+    transform: translate(-50%, -50%); /* Center it */
+    background-color: white; /* Background color */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 6px; /* Rounded corners */
+    padding: 15px 20px; /* Padding inside the popup */
+    z-index: 2000; /* Ensure it appears on top */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+    width: 320px; /* Width of the popup */
+    text-align: center; /* Center text */
+    font-family: 'Arial', sans-serif; /* Clean font */
+}
+
+/* Close Button Styles */
+.close-popup {
+    background: none; /* No background */
+    border: none; /* No border */
+    color: #999; /* Light gray for the close button */
+    font-size: 18px; /* Font size */
+    position: absolute; /* Position it in the corner */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s; /* Transition for hover effect */
+}
+
+.close-popup:hover {
+    color: #ff0000; /* Red color on hover */
+}
+
+/* Ensure success message is green */
+.success-message {
+    color: #4CAF50; /* Green color for success message */
+    margin: 0; /* Remove margin for better alignment */
+    font-weight: bold; /* Make the message bold */
+}
+
+/* Additional styles for better appearance */
+.success-popup p {
+    margin-top: 20px; /* Space between close button and message */
+    line-height: 1.5; /* Better line spacing */
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Above everything else */
+}
+
+/* Modal Styles */
+.modal {
+    background: linear-gradient(135deg, #ffffff, #f0f8ff); /* Soft gradient background */
+    padding: 30px; /* Increased padding */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 400px; /* Fixed width */
+    text-align: center; /* Center text */
+    animation: fadeIn 0.3s; /* Animation on entry */
+}
+
+/* Close Button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px; /* Increased size for visibility */
+    color: red; /* Red color for close button */
+    transition: color 0.3s; /* Transition for hover */
+}
+
+.close-button:hover {
+    color: darkred; /* Darker red on hover */
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+
+    input[type="text"],
+    select,
+    button {
+        padding: 8px; /* Adjust padding for smaller screens */
+    }
 }
