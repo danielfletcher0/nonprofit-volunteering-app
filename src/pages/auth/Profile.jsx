@@ -163,7 +163,7 @@ function Profile() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData), // Send the form data as JSON
+      body: JSON.stringify(formData), 
     })
     .then(response => response.json())
     .then(data => {

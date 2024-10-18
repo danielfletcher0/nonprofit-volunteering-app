@@ -59,7 +59,6 @@ router.post('/create', (req, res) => {
     const newProfile = { fullName, address1, address2, city, state, zip, skills, preferences, availability };
     const validationErrors = validateProfile(newProfile);
 
-    // If there are validation errors, return a 400 response with the errors
     if (validationErrors.length > 0) {
         return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
