@@ -8,6 +8,7 @@ import EventCreation from "./pages/event/event";
 import Profile from "./pages/auth/Profile";
 import VolunteerHistory from "./pages/history/history";
 import VolunteerMatching from "./pages/match/match";
+import NotificationSystem from "./components/Notification";  
 import './App.css';
 
 const App = () => (
@@ -54,6 +55,7 @@ const App = () => (
                 <Route path="/history" element={<VolunteerHistory />} />
                 <Route path="/match" element={<VolunteerMatching />} />
             </Routes>
+                        <NotificationSystem />
         </div>
     </Router>
 );
