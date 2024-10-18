@@ -13,6 +13,7 @@ npm install react-router-dom
 npm run dev
 
 backend:
+cd backend
 npm install
 npm install nodemon
 npm isntall cors
