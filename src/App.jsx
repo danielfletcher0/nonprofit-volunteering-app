@@ -8,7 +8,8 @@ import EventCreation from "./pages/event/event";
 import Profile from "./pages/auth/Profile";
 import VolunteerHistory from "./pages/history/history";
 import VolunteerMatching from "./pages/match/match";
-import NotificationSystem from "./components/Notification";  
+import NotificationSystem from "./components/Notification";
+import EventHistory from "./pages/history/ehistory";  
 import './App.css';
 
 const App = () => (
@@ -35,6 +36,9 @@ const App = () => (
                         <NavLink to="/create" activeClassName="active">Create New Event</NavLink>
                     </li>
                     <li>
+                        <NavLink to="/events" activeClassName="active">Event History</NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/profile" activeClassName="active">Profile</NavLink>
                     </li>
                     <li>
@@ -51,6 +55,7 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<UserRegistration />} />
                 <Route path="/create" element={<EventCreation />} />
+                <Route path="/events" element={<EventHistory />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/history" element={<VolunteerHistory />} />
                 <Route path="/match" element={<VolunteerMatching />} />
