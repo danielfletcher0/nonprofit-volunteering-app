@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // Import your route files
 const eventRouter = require('./routes/eventRouter');
-//const historyRouter = require('./routes/historyRouter');
+const historyRouter = require('./routes/historyRouter');
 //const homeRouter = require('./routes/homeRouter');
 //const loginRouter = require('./routes/LoginRouter');
 const matchRouter = require('./routes/matchRouter');
@@ -19,7 +19,7 @@ const profileRouter = require('./routes/ProfileRouter');
 
 // Use the routers and define their base paths
 app.use('/events', eventRouter);  
-//app.use('/history', historyRouter); 
+app.use('/history', historyRouter); 
 //app.use('/home', homeRouter); 
 //app.use('/login', loginRouter); 
 app.use('/match', matchRouter);

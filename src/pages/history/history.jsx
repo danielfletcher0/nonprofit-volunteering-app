@@ -1,40 +1,36 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios"; 
 import "./history.css";
 
 const VolunteerHistory = () => {
-    const volunteerData = {
-        "John Doe": [  
-            { name: "Beach Cleanup", description: "Cleaning up the beach to promote a cleaner environment.", location: "California Beach", skills: "Teamwork, Physical fitness", date: "2023-06-15" },
-            { name: "Food Drive", description: "Collecting food donations for local shelters.", location: "Community Center", skills: "Organizational skills, Communication", date: "2023-07-20" }
-        ],
-        "Jane Smith": [], // No participation
-        "Alice Johnson": [
-            { name: "Park Renovation", description: "Renovating the local park with new facilities.", location: "Central Park", skills: "Landscaping, Painting", date: "2023-08-10" }
-        ],
-    };
-
     const [selectedVolunteer, setSelectedVolunteer] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [historyDisplay, setHistoryDisplay] = useState("");
 
-    const showSuggestions = (value) => {
-        const matches = Object.keys(volunteerData).filter(name => name.toLowerCase().includes(value.toLowerCase()));
-        setSuggestions(matches);
+    const showSuggestions = async (value) => {
+        try {
+            const response = await axios.get('http://localhost:4000/history/volunteers');
+            const volunteers = response.data;
+            const matches = volunteers.filter(name => name.toLowerCase().includes(value.toLowerCase()));
+            setSuggestions(matches);
+        } catch (error) {
+            console.error('Error fetching volunteer suggestions:', error);
+        }
     };
 
     const selectVolunteer = (volunteer) => {
         setSelectedVolunteer(volunteer);
-        document.getElementById('volunteer-name').value = volunteer; // Fill input with the selected name
-        setSuggestions([]); // Clear suggestions
+        document.getElementById('volunteer-name').value = volunteer; 
+        setSuggestions([]);
         document.getElementById('view-history').disabled = false;
     };
 
-    const viewHistory = () => {
+    const viewHistory = async () => {
         if (selectedVolunteer) {
-            const historyItems = volunteerData[selectedVolunteer];
+            try {
+                const response = await axios.get(`http://localhost:4000/history/volunteers`);
+                const historyItems = response.data;
 
-            if (historyItems) {
                 if (historyItems.length === 0) {
                     setHistoryDisplay(`<h2>History for ${selectedVolunteer}</h2><p>No participation history found.</p>`);
                 } else {
@@ -63,8 +59,12 @@ const VolunteerHistory = () => {
                     tableHTML += `</tbody></table>`;
                     setHistoryDisplay(tableHTML);
                 }
-            } else {
-                setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
+                } else {
+                    setHistoryDisplay(`<h2>Error retrieving history</h2>`);
+                }
             }
         }
     };
@@ -72,7 +72,7 @@ const VolunteerHistory = () => {
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             const inputValue = e.target.value;
-            if (inputValue in volunteerData) {
+            if (suggestions.includes(inputValue)) {
                 selectVolunteer(inputValue);
                 viewHistory();
             } else {
@@ -84,11 +84,10 @@ const VolunteerHistory = () => {
     return (
         <div className="container">
             <head>
-                <link rel="stylesheet" href="history.css"></link>
+                <link rel="stylesheet" href="history.css" />
                 <title>Volunteer History</title>
             </head>
 
-            {/* Title Section */}
             <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', textAlign: 'center' }}>
                 <h1 className="text-4xl font-bold">Volunteer History</h1>
             </div>
@@ -98,11 +97,9 @@ const VolunteerHistory = () => {
                 <input
                     type="text"
                     id="volunteer-name"
-                    onInput={(e) => {
-                        showSuggestions(e.target.value);
-                    }}
+                    onInput={(e) => showSuggestions(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type a name (e.g., John Doe, Jane Smith, Alice Johnson)"
+                    placeholder="Type a name"
                 />
                 <div id="suggestions" className="suggestions">
                     {suggestions.map((name) => (
