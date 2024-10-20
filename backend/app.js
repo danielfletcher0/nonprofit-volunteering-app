@@ -8,8 +8,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());  // Parse incoming JSON data
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    res.send("Welcome to the API!"); // Or any other message you'd like
+});
+
 // Import your route files
 const eventRouter = require('./routes/eventRouter');
+const eventHRouter = require('./routes/eventHRouter');
 const historyRouter = require('./routes/historyRouter');
 //const homeRouter = require('./routes/homeRouter');
 //const loginRouter = require('./routes/LoginRouter');
@@ -18,7 +23,8 @@ const profileRouter = require('./routes/ProfileRouter');
 //const registerRouter = require('./routes/RegisterRouter');
 
 // Use the routers and define their base paths
-app.use('/events', eventRouter);  
+app.use('/events', eventRouter);
+app.use('/event-history', eventHRouter);
 app.use('/history', historyRouter); 
 //app.use('/home', homeRouter); 
 //app.use('/login', loginRouter); 

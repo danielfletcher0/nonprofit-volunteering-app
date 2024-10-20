@@ -1,59 +1,52 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./eHistory.css";
 
 const EventHistory = () => {
     const [historyDisplay, setHistoryDisplay] = useState("");
 
-    const volunteerData = [
-        { 
-            name: "Beach Cleanup", 
-            description: "Cleaning up the beach to promote a cleaner environment.", 
-            location: "California Beach", 
-            skills: "Teamwork, Physical fitness", 
-            volunteer: "John Doe", 
-            date: "2023-06-15" 
-        },
-        { 
-            name: "Food Drive", 
-            description: "Collecting food donations for local shelters.", 
-            location: "Community Center", 
-            skills: "Organizational skills, Communication", 
-            volunteer: "Alice Johnson", 
-            date: "2023-07-20" 
+    // Fetch event history data from the backend
+    const fetchEventHistory = async () => {
+        try {
+            const response = await fetch("http://localhost:4000/event-history/history");
+            if (!response.ok) {
+                throw new Error("Failed to fetch event history");
+            }
+            const volunteerData = await response.json();
+            // Convert data into HTML table rows
+            let tableRows = volunteerData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.description}</td>
+                    <td>${item.location}</td>
+                    <td>${item.skills}</td>
+                    <td>${item.volunteer}</td>
+                    <td>${item.date}</td>
+                </tr>
+            `).join('');
+
+            const tableHTML = `
+                <h2>Event History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Skills</th>
+                            <th>Volunteer</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            `;
+            
+            setHistoryDisplay(tableHTML);
+        } catch (error) {
+            console.error("Error fetching event history:", error);
+            alert("Could not load event history.");
         }
-    ];
-
-    const viewHistory = () => {
-        let tableRows = volunteerData.map(item => `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td>${item.location}</td>
-                <td>${item.skills}</td>
-                <td>${item.volunteer}</td>
-                <td>${item.date}</td>
-            </tr>
-        `).join('');
-
-        const tableHTML = `
-            <h2>Event History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event Name</th>
-                        <th>Description</th>
-                        <th>Location</th>
-                        <th>Skills</th>
-                        <th>Volunteer</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>${tableRows}</tbody>
-            </table>
-        `;
-        
-        setHistoryDisplay(tableHTML);
     };
 
     return (
@@ -63,7 +56,7 @@ const EventHistory = () => {
                 <div className="eHistory-container">
                     <button
                         id="view-history"
-                        onClick={viewHistory}
+                        onClick={fetchEventHistory} // Call fetchEventHistory on button click
                     >
                         Load Events
                     </button>
