@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1729382269225" clover="3.2.0">
-  <project timestamp="1729382269225" name="All files">
-    <metrics statements="132" coveredstatements="117" conditionals="73" coveredconditionals="61" methods="23" coveredmethods="18" elements="228" coveredelements="196" complexity="0" loc="132" ncloc="132" packages="2" files="5" classes="5"/>
+<coverage generated="1729383187937" clover="3.2.0">
+  <project timestamp="1729383187937" name="All files">
+    <metrics statements="180" coveredstatements="122" conditionals="111" coveredconditionals="61" methods="30" coveredmethods="18" elements="321" coveredelements="201" complexity="0" loc="180" ncloc="180" packages="2" files="5" classes="5"/>
     <package name="backend">
       <metrics statements="20" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="app.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\app.js">
@@ -29,7 +29,7 @@
       </file>
     </package>
     <package name="backend.routes">
-      <metrics statements="112" coveredstatements="98" conditionals="73" coveredconditionals="61" methods="22" coveredmethods="18"/>
+      <metrics statements="160" coveredstatements="103" conditionals="111" coveredconditionals="61" methods="29" coveredmethods="18"/>
       <file name="ProfileRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\ProfileRouter.js">
         <metrics statements="63" coveredstatements="54" conditionals="61" coveredconditionals="50" methods="9" coveredmethods="9"/>
         <line num="1" count="1" type="stmt"/>
@@ -97,15 +97,63 @@
         <line num="129" count="1" type="stmt"/>
       </file>
       <file name="eventRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\eventRouter.js">
-        <metrics statements="8" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <metrics statements="56" coveredstatements="10" conditionals="38" coveredconditionals="0" methods="9" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <line num="12" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="13" count="0" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="22" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="27" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="32" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="37" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="70" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="81" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="89" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="90" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="91" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="92" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="97" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="108" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="113" count="0" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
       </file>
       <file name="historyRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\historyRouter.js">
         <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>

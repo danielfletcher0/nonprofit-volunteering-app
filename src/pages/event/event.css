@@ -1,38 +1,68 @@
+/* Reset some default styles */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
     margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
-.container {
-    width: 80%;
-    max-width: 600px;
-    margin: 4rem auto; /* Increased top margin for more space */
-    background: #f0ebeb;
-    padding: 2rem; /* Inner padding */
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Header Container */
+.event-header-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    margin-bottom: 20px; /* Add space below the header */
 }
 
-h1 {
-    margin-bottom: 1rem;
-    font-size: 24px;
+.event-header-container h1 {
     color: #333;
+    margin-right: 20px; /* Space between title and button */
+    font-size: 32px; /* Increased font size */
+    font-weight: bold; /* Make it bold */
+    margin-bottom: 10px; /* Space below the title */
 }
 
-.form-group {
+/* Container Styles */
+.event-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Scoped Button Styles */
+.event-container button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: red; /* Red background */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.event-container button:hover {
+    background-color: darkred; /* Darker red on hover */
+}
+
+/* Form Group Styles */
+.event-form-group {
     margin-bottom: 2rem;
 }
 
-label {
+.event-form-group label {
     display: block;
     font-size: 14px;
     margin-bottom: 0.5rem;
     color: #666;
 }
 
-input[type="text"] {
-    width: 35%;
+.event-form-group input[type="text"],
+.event-form-group input[type="date"],
+.event-form-group select {
+    width: 100%; /* Full width for better usability */
     padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -40,23 +70,6 @@ input[type="text"] {
 }
 
 textarea[id="describe"] {
-    width: 60%;
-    padding: 2rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #ff0000; /* Red background */
-    color: #fff; /* White text */
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #740000; /* Darker red on hover */
+    width: 100%; /* Adjust to full width */
+    padding: 0.5rem; /* Reduce padding for consistency */
 }

@@ -9,7 +9,7 @@ import Profile from "./pages/auth/Profile";
 import VolunteerHistory from "./pages/history/history";
 import VolunteerMatching from "./pages/match/match";
 import NotificationSystem from "./components/Notification";
-import EventHistory from "./pages/history/ehistory";  
+import EventHistory from "./pages/event-history/eHistory";
 import './App.css';
 
 const App = () => (
