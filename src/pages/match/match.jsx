@@ -141,7 +141,7 @@ const VolunteerMatching = () => {
                         id="volunteer-name"
                         value={volunteerName}
                         onChange={handleVolunteerInputChange}
-                        placeholder="Type a name (e.g., John Doe, Jane Smith, Alice Johnson)"
+                        placeholder="Type a name (e.g., Alice, Bob, John Doe)"
                     />
                     {loading && <p>Loading...</p>}
                     {suggestions.length > 0 && (
