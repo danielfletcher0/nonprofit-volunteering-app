@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 let events = [];
 
 // Validation
@@ -9,7 +8,7 @@ const validateEvent = (event) => {
     let errors = [];
 
     // Event Name 
-    if (!event.eventName || event.fullName.length > 100) {
+    if (!event.eventName || event.eventName.length > 100) {
         errors.push('Event Name is required and must be less than 100 characters.');
     }
 
@@ -30,12 +29,12 @@ const validateEvent = (event) => {
 
     // Urgency 
     if (!event.urgency) {
-        errors.push('Urgence level is required.');
+        errors.push('Urgency level is required.');
     }
 
     // Date  
     if (!event.date) {
-        errors.push('Time of event is required.');
+        errors.push('Date of event is required.');
     }
 
     return errors;
@@ -59,11 +58,12 @@ router.post('/create', (req, res) => {
     res.status(201).json({ message: 'Event created successfully', event: newEvent });
 });
 
+// Get all events
 router.get('/', (req, res) => {
     res.json(events);
 });
 
-
+// Get an event by ID
 router.get('/:id', (req, res) => {
     const event = events.find(p => p.id == req.params.id);  
 
@@ -74,7 +74,7 @@ router.get('/:id', (req, res) => {
     res.json(event);
 });
 
-// Update a event (PUT /event/:id)
+// Update an event (PUT /events/:id)
 router.put('/:id', (req, res) => {
     const event = events.find(p => p.id == req.params.id);  
 
@@ -101,7 +101,7 @@ router.put('/:id', (req, res) => {
     res.json({ message: 'Event updated successfully', event });
 });
 
-// Delete a event (DELETE /event/:id)
+// Delete an event (DELETE /events/:id)
 router.delete('/:id', (req, res) => {
     const eventIndex = events.findIndex(p => p.id == req.params.id);  
 
