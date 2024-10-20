@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1729383187937" clover="3.2.0">
-  <project timestamp="1729383187937" name="All files">
-    <metrics statements="180" coveredstatements="122" conditionals="111" coveredconditionals="61" methods="30" coveredmethods="18" elements="321" coveredelements="201" complexity="0" loc="180" ncloc="180" packages="2" files="5" classes="5"/>
+<coverage generated="1729398103950" clover="3.2.0">
+  <project timestamp="1729398103951" name="All files">
+    <metrics statements="200" coveredstatements="141" conditionals="125" coveredconditionals="75" methods="33" coveredmethods="20" elements="358" coveredelements="236" complexity="0" loc="200" ncloc="200" packages="2" files="6" classes="6"/>
     <package name="backend">
-      <metrics statements="20" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <metrics statements="24" coveredstatements="22" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
       <file name="app.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\app.js">
-        <metrics statements="20" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="24" coveredstatements="22" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -14,22 +14,26 @@
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
         <line num="21" count="1" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
-        <line num="25" count="1" type="stmt"/>
         <line num="26" count="1" type="stmt"/>
-        <line num="29" count="1" type="stmt"/>
-        <line num="30" count="1" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="34" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
       </file>
     </package>
     <package name="backend.routes">
-      <metrics statements="160" coveredstatements="103" conditionals="111" coveredconditionals="61" methods="29" coveredmethods="18"/>
+      <metrics statements="176" coveredstatements="119" conditionals="125" coveredconditionals="75" methods="31" coveredmethods="20"/>
       <file name="ProfileRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\ProfileRouter.js">
         <metrics statements="63" coveredstatements="54" conditionals="61" coveredconditionals="50" methods="9" coveredmethods="9"/>
         <line num="1" count="1" type="stmt"/>
@@ -95,6 +99,25 @@
         <line num="125" count="1" type="stmt"/>
         <line num="126" count="1" type="stmt"/>
         <line num="129" count="1" type="stmt"/>
+      </file>
+      <file name="eventHRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\eventHRouter.js">
+        <metrics statements="16" coveredstatements="16" conditionals="14" coveredconditionals="14" methods="2" coveredmethods="2"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="2" count="2" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="34" count="4" type="cond" truecount="8" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="37" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="40" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="49" count="2" type="stmt"/>
       </file>
       <file name="eventRouter.js" path="C:\Users\sarah\nonprofit-volunteering-app\backend\routes\eventRouter.js">
         <metrics statements="56" coveredstatements="10" conditionals="38" coveredconditionals="0" methods="9" coveredmethods="0"/>
