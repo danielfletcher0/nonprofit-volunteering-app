@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import "./history.css";
 
 const VolunteerHistory = () => {
@@ -8,9 +8,15 @@ const VolunteerHistory = () => {
     const [historyDisplay, setHistoryDisplay] = useState("");
 
     const showSuggestions = async (value) => {
+        if (!value) {
+            setSuggestions([]); // Clear suggestions if input is empty
+            return;
+        }
+        
         try {
             const response = await axios.get('http://localhost:4000/history/volunteers');
             const volunteers = response.data;
+            console.log(volunteers); // Debug log
             const matches = volunteers.filter(name => name.toLowerCase().includes(value.toLowerCase()));
             setSuggestions(matches);
         } catch (error) {
@@ -22,44 +28,49 @@ const VolunteerHistory = () => {
         setSelectedVolunteer(volunteer);
         document.getElementById('volunteer-name').value = volunteer; 
         setSuggestions([]);
-        document.getElementById('view-history').disabled = false;
     };
 
     const viewHistory = async () => {
         if (selectedVolunteer) {
+            console.log("Selected Volunteer:", selectedVolunteer); // Debug log
             try {
-                const response = await axios.get(`http://localhost:4000/history/volunteers`);
+                const response = await axios.get(`http://localhost:4000/history/${encodeURIComponent(selectedVolunteer)}`);
                 const historyItems = response.data;
+
+                console.log("History Items:", historyItems); // Debug log for history items
 
                 if (historyItems.length === 0) {
                     setHistoryDisplay(`<h2>History for ${selectedVolunteer}</h2><p>No participation history found.</p>`);
                 } else {
-                    let tableHTML = `<h2>History for ${selectedVolunteer}</h2><table>
-                        <thead>
-                            <tr>
-                                <th>Event Name</th>
-                                <th>Event Description</th>
-                                <th>Location</th>
-                                <th>Required Skills</th>
-                                <th>Event Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
-                    historyItems.forEach(item => {
-                        tableHTML += `<tr>
+                    const tableRows = historyItems.map(item => `
+                        <tr>
                             <td>${item.name}</td>
                             <td>${item.description}</td>
                             <td>${item.location}</td>
                             <td>${item.skills}</td>
                             <td>${item.date}</td>
-                        </tr>`;
-                    });
-
-                    tableHTML += `</tbody></table>`;
-                    setHistoryDisplay(tableHTML);
+                        </tr>
+                    `).join('');
+                    setHistoryDisplay(`
+                        <h2>History for ${selectedVolunteer}</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Location</th>
+                                    <th>Skills</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    `);
                 }
             } catch (error) {
+                console.error("Error fetching history:", error); // Debug log
                 if (error.response && error.response.status === 404) {
                     setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
                 } else {
@@ -71,27 +82,17 @@ const VolunteerHistory = () => {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            const inputValue = e.target.value;
-            if (suggestions.includes(inputValue)) {
-                selectVolunteer(inputValue);
+            const inputValue = e.target.value.trim();
+            if (inputValue) {
+                setSelectedVolunteer(inputValue);
                 viewHistory();
-            } else {
-                setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
             }
         }
     };
 
     return (
         <div className="container">
-            <head>
-                <link rel="stylesheet" href="history.css" />
-                <title>Volunteer History</title>
-            </head>
-
-            <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', textAlign: 'center' }}>
-                <h1 className="text-4xl font-bold">Volunteer History</h1>
-            </div>
-
+            <h1 className="text-4xl font-bold">Volunteer History</h1>
             <div className="form-group">
                 <label htmlFor="volunteer-name">Volunteer Name:</label>
                 <input
@@ -99,20 +100,21 @@ const VolunteerHistory = () => {
                     id="volunteer-name"
                     onInput={(e) => showSuggestions(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type a name"
+                    placeholder="Type a name (e.g., John Doe, Jane Smith, Alice Johnson)"
                 />
-                <div id="suggestions" className="suggestions">
-                    {suggestions.map((name) => (
-                        <div key={name} className="suggestion-item" onClick={() => selectVolunteer(name)}>
-                            {name}
-                        </div>
-                    ))}
-                </div>
+                {suggestions.length > 0 && (
+                    <ul className="suggestions-dropdown show">
+                        {suggestions.map(name => (
+                            <li key={name} className="suggestion-item" onClick={() => selectVolunteer(name)}>
+                                {name}
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
 
             <button
                 id="view-history"
-                style={{ marginTop: '1rem' }}
                 onClick={viewHistory}
                 disabled={!selectedVolunteer}
             >
@@ -121,7 +123,6 @@ const VolunteerHistory = () => {
 
             <div
                 id="history-display"
-                style={{ marginTop: '2rem' }}
                 dangerouslySetInnerHTML={{ __html: historyDisplay }}
             />
         </div>

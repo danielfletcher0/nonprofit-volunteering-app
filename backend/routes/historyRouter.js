@@ -31,6 +31,14 @@ const volunteerHistory = {
     ],
 };
 
+// Route to get all volunteer names
+router.get('/volunteers', (req, res) => {
+    console.log('Request received for volunteer names'); // Debug log
+    const volunteerNames = Object.keys(volunteerHistory);
+    console.log('Volunteer names:', volunteerNames); // Debug log
+    res.json(volunteerNames);
+});
+
 // Route to get volunteer history by name
 router.get('/:volunteerName', (req, res) => {
     const volunteerName = req.params.volunteerName;
@@ -40,19 +48,9 @@ router.get('/:volunteerName', (req, res) => {
         return res.status(400).json({ message: 'Invalid volunteer name length' });
     }
 
-    const historyItems = volunteerHistory[volunteerName];
+    const historyItems = volunteerHistory[volunteerName] || []; // Default to empty array
 
-    if (historyItems) {
-        res.json(historyItems);
-    } else {
-        res.status(404).json({ message: 'Volunteer not found' });
-    }
-});
-
-// Route to get all volunteer names
-router.get('/volunteers', (req, res) => {
-    const volunteerNames = Object.keys(volunteerHistory);
-    res.json(volunteerNames);
+    res.json(historyItems); // Always return an array, even if empty
 });
 
 module.exports = router;
