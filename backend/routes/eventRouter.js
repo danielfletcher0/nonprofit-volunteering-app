@@ -8,7 +8,7 @@ const validateEvent = (event) => {
     let errors = [];
 
     // Event Name 
-    if (!event.eventName || event.eventName.length > 100) {
+    if (!event.name || event.name.length > 100) {
         errors.push('Event Name is required and must be less than 100 characters.');
     }
 
@@ -23,7 +23,7 @@ const validateEvent = (event) => {
     }
 
     // Skills  
-    if (!Array.isArray(event.skills) || event.skills.length === 0) {
+    if (!Array.isArray(event.skill) || event.skill.length === 0) {
         errors.push('At least one skill is required.');
     }
 
@@ -33,7 +33,7 @@ const validateEvent = (event) => {
     }
 
     // Date  
-    if (!event.date) {
+    if (!event.availability) {
         errors.push('Date of event is required.');
     }
 
@@ -42,10 +42,10 @@ const validateEvent = (event) => {
 
 // Create a new event 
 router.post('/create', (req, res) => {
-    const { eventName, description, location, skills, urgency, date } = req.body;
+    const { name, description, location, skill, urgency, availability } = req.body;
 
     // Validate event data
-    const newEvent = { eventName, description, location, skills, urgency, date };
+    const newEvent = { name, description, location, skill, urgency, availability };
     const validationErrors = validateEvent(newEvent);
 
     if (validationErrors.length > 0) {
@@ -82,15 +82,15 @@ router.put('/:id', (req, res) => {
         return res.status(404).json({ message: 'Event not found' });
     }
 
-    const { eventName, description, location, skills, urgency, date } = req.body;
+    const { name, description, location, skill, urgency, availability } = req.body;
 
     // Update event fields
-    event.eventName = eventName || event.eventName;
+    event.name = name || event.name;
     event.description = description || event.description;
     event.location = location || event.location;
-    event.skills = skills || event.skills;
+    event.skill = skill || event.skill;
     event.urgency = urgency || event.urgency;
-    event.date = date || event.date;
+    event.availability = availability || event.availability;
 
     // Validate the updated event data
     const validationErrors = validateEvent(event);

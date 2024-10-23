@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 const EventCreation = () => {
     const [formData, setFormData] = useState({
         name: '',
+        description: '',
         location: '',
         skill: '',
         urgency: '',
@@ -22,7 +23,7 @@ const EventCreation = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:4000/profile/create', {
+        fetch('http://localhost:4000/events/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,6 +55,16 @@ const EventCreation = () => {
                 <div className="event-form-group">
                     <label htmlFor="event-name">Event Type:</label>
                     <input type="text" onChange={handleInputChange} id="event-name" name="name" maxLength="100" />
+                </div>
+                <div className="event-form-group">
+                    <label htmlFor="description">Description:</label>
+                    <textarea 
+                        onChange={handleInputChange} 
+                        id="description" 
+                        name="description" 
+                        rows="7"  
+                        className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                    />
                 </div>
                 <div className="event-form-group">
                     <label htmlFor="location">Location</label>
