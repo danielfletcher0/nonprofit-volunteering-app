@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-
-let profiles = [];
+const db = require('../database/db'); // Import the database functions
 
 // Validation function to check profile fields
 const validateProfile = (profile) => {
@@ -18,7 +16,7 @@ const validateProfile = (profile) => {
         errors.push('Address 1 is required and must be less than 100 characters.');
     }
 
-    // Address 2 Validation 
+    // Address 2 Validation
     if (profile.address2 && profile.address2.length > 100) {
         errors.push('Address 2 must be less than 100 characters if provided.');
     }
@@ -28,22 +26,22 @@ const validateProfile = (profile) => {
         errors.push('City is required and must be less than 50 characters.');
     }
 
-    // State Validation 
+    // State Validation
     if (!profile.state || profile.state.length !== 2) {
         errors.push('State is required and must be exactly 2 characters.');
     }
 
-    // Zip Code Validation 
+    // Zip Code Validation
     if (!profile.zip || profile.zip.length < 5 || profile.zip.length > 9) {
         errors.push('Zip Code must be between 5 and 9 characters.');
     }
 
-    // Skills Validation 
+    // Skills Validation
     if (!Array.isArray(profile.skills) || profile.skills.length === 0) {
         errors.push('At least one skill is required.');
     }
 
-    // Availability Validation 
+    // Availability Validation
     if (!Array.isArray(profile.availability) || profile.availability.length === 0) {
         errors.push('At least one available date is required.');
     }
@@ -51,8 +49,8 @@ const validateProfile = (profile) => {
     return errors;
 };
 
-// Create a new profile 
-router.post('/create', (req, res) => {
+// Create a new profile
+router.post('/create', async (req, res) => {
     const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = req.body;
 
     // Validate profile data
@@ -63,67 +61,72 @@ router.post('/create', (req, res) => {
         return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
 
-    newProfile.id = profiles.length;  
-    profiles.push(newProfile);
-
-    res.status(201).json({ message: 'Profile created successfully', profile: newProfile });
-});
-
-router.get('/', (req, res) => {
-    res.json(profiles);
-});
-
-
-router.get('/:id', (req, res) => {
-    const profile = profiles.find(p => p.id == req.params.id);  
-
-    if (!profile) {
-        return res.status(404).json({ message: 'Profile not found' });
+    try {
+        // Call db function to add profile to the database
+        const profileId = await db.createProfile(newProfile);
+        res.status(201).json({ message: 'Profile created successfully', profileId });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding profile to database', error: error.message });
     }
-
-    res.json(profile);
 });
 
-// Update a profile (PUT /profile/:id)
-router.put('/:id', (req, res) => {
-    const profile = profiles.find(p => p.id == req.params.id);  
-
-    if (!profile) {
-        return res.status(404).json({ message: 'Profile not found' });
+// Get all profiles
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await db.getAllProfiles();
+        res.json(profiles);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving profiles from database', error: error.message });
     }
+});
 
+// Get a profile by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const profile = await db.getProfileById(req.params.id);
+        if (!profile) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.json(profile);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving profile from database', error: error.message });
+    }
+});
+
+// Update a profile
+router.put('/:id', async (req, res) => {
     const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = req.body;
 
-    // Update profile fields if they are provided
-    profile.fullName = fullName || profile.fullName;
-    profile.address1 = address1 || profile.address1;
-    profile.address2 = address2 || profile.address2;
-    profile.city = city || profile.city;
-    profile.state = state || profile.state;
-    profile.zip = zip || profile.zip;
-    profile.skills = skills || profile.skills;
-    profile.preferences = preferences || profile.preferences;
-    profile.availability = availability || profile.availability;
+    // Build profile object for update
+    const updatedProfile = { fullName, address1, address2, city, state, zip, skills, preferences, availability };
+    const validationErrors = validateProfile(updatedProfile);
 
-    // Validate the updated profile data
-    const validationErrors = validateProfile(profile);
     if (validationErrors.length > 0) {
         return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
 
-    res.json({ message: 'Profile updated successfully', profile });
+    try {
+        const result = await db.updateProfile(req.params.id, updatedProfile);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.json({ message: 'Profile updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating profile in database', error: error.message });
+    }
 });
 
-// Delete a profile (DELETE /profile/:id)
-router.delete('/:id', (req, res) => {
-    const profileIndex = profiles.findIndex(p => p.id == req.params.id);  
-
-    if (profileIndex === -1) {
-        return res.status(404).json({ message: 'Profile not found' });
+// Delete a profile
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await db.deleteProfile(req.params.id);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.json({ message: 'Profile deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting profile from database', error: error.message });
     }
-
-    profiles.splice(profileIndex, 1);
-    res.json({ message: 'Profile deleted successfully' });
 });
 
 module.exports = router;
