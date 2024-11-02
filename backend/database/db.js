@@ -185,9 +185,10 @@ const getAllEvents = () => {
 
 const deleteEvent = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = "DELETE FROM volunteer WHERE vol_id = ?";
+        const sql = "DELETE FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
+                console.log('No Event by this ID');
                 return reject(err);
             }
             resolve(result);
@@ -201,14 +202,29 @@ const getEventByVol = (id) => {
         const sql = "SELECT * FROM event WHERE vol_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
+                console.log('No event for this Volunteer');
                 return reject(err);
             }
             resolve(result)
         });
     });
 };
+
+// Get Event ID by name
+const getEventID = (name) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT event_id FROM event WHERE event_name = ?";
+        con.query(sql, [id], (err, result) => {
+            if (err) {
+                console.log('No event ID from this name');
+                return reject(err);
+            }
+            resolve(result[0]);
+        });
+    });
+};
 //////////////////////////////////////
-//Get specific Volunteer ID
+// Get specific Volunteer ID
 const getV_IDbyName = (name) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT vol_id FROM volunteer WHERE full_name = ?";
@@ -221,8 +237,30 @@ const getV_IDbyName = (name) => {
     });
 };
 
-//
+// Get All Volunteers
+const getAllVol = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM volunteer";
+        con.query(sql, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
 
+const getAllVolHist = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM volunteer history";
+        con.query(sql, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
 
 module.exports = {
     getLoginIdByUsername,
@@ -236,6 +274,9 @@ module.exports = {
     getAllEvents,
     deleteEvent,
     getEventByVol,
+    getEventID,
     ///////////
-    getV_IDbyName
+    getV_IDbyName,
+    getAllVol,
+    getAllVolHist
 };
