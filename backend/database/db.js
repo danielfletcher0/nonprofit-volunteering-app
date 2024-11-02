@@ -28,6 +28,16 @@ const createUser = (userData) => {
     });
 };
 
+const getUserByUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM login WHERE login_user = ?";
+        con.query(sql, [username], (err, result) => {
+            if (err) return reject(err);
+            resolve(result.length > 0 ? result[0] : null);
+        });
+    });
+};
+
 const getUserByUsernameAndPassword = (username, password) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT * FROM login WHERE login_user = ? AND login_pass = ?`;
@@ -336,6 +346,7 @@ module.exports = {
     createProfile,
     getAllProfiles,
     getProfileById,
+    getUserByUsername,
     getUserByUsernameAndPassword,
     updateProfile,
     deleteProfile,

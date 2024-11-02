@@ -31,14 +31,13 @@ const validateRegistration = (user) => {
 router.post("/", async (req, res) => {
     const { username, password } = req.body;
     const newUser = { username, password };
-    const validationErrors = validateRegistration(newUser);
-
-    if (validationErrors.length > 0) {
-        return res.status(400).json({ message: validationErrors[0] });
-    }
 
     try {
-        console.log("Received registration data:", newUser);
+        const userExists = await db.getUserByUsername(username);
+        if (userExists) {
+            return res.status(409).json({ message: "Username already exists" });
+        }
+
         const userId = await db.createUser(newUser);
         res.status(201).json({
             message: "User registered successfully",
