@@ -1,65 +1,85 @@
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import "./style.css";
+import axios from "axios";
 
-const UserRegistration = () => {
+function RegisterPage() {
+    const [formData, setFormData] = useState({
+        username: "",
+        password: "",
+        email: "",
+    });
+    const [message, setMessage] = useState("");
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(
+                "http://localhost:4000/register",
+                formData
+            );
+            setMessage(response.data.message);
+            setIsSuccess(true);
+        } catch (error) {
+            setMessage(
+                error.response
+                    ? error.response.data.message
+                    : "Registration failed"
+            );
+            setIsSuccess(false);
+        }
+    };
+
     return (
-        <main className="w-full h-screen flex flex-col items-center justify-center bg-gray-50 sm:px-4">
-            <div className="w-full space-y-6 text-gray-600 sm:max-w-md">
-                <div className="text-center">
-                    <div className="mb-14">
-                        <img
-                            src="/logo.png"
-                            width={150}
-                            className="mx-auto inline"
-                            alt="organization icon"
-                        />
-                        <h4 className="text-gray-800 text-2xl font-bold sm:text-3xl inline ml-5">
-                            CougarCare
-                        </h4>
-                    </div>
-                    <div className="mt-5 space-y-2">
-                        <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">
-                            Create an account
-                        </h3>
-                        <p className="">
-                            Already have an account?{" "}
-                            <Link
-                                to="/login"
-                                className="font-medium text-indigo-600 hover:text-indigo-500"
-                            >
-                                Log in
-                            </Link>
-                        </p>
-                    </div>
-                </div>
-                <div className="bg-white shadow p-4 py-6 sm:p-6 sm:rounded-lg">
-                    <form
-                        onSubmit={(e) => e.preventDefault()}
-                        className="space-y-5"
-                    >
-                        <div>
-                            <label className="font-medium">Username</label>
-                            <input
-                                type="text"
-                                required
-                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            />
-                        </div>
-                        <div>
-                            <label className="font-medium">Password</label>
-                            <input
-                                type="password"
-                                required
-                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            />
-                        </div>
-                        <button className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
-                            Create account
-                        </button>
-                    </form>
-                </div>
+        <div className="auth-container">
+            <div className="logo-section">
+                <img src="logo.png" alt="CougarCare Logo" className="logo" />
+                <h1>CougarCare</h1>
             </div>
-        </main>
+            <h2>Register your account</h2>
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <label htmlFor="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Username"
+                    onChange={handleChange}
+                    className="input-field"
+                    required
+                />
+                <label htmlFor="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    className="input-field"
+                    required
+                />
+                <button type="submit" className="submit-button">
+                    Register
+                </button>
+            </form>
+            <p className="signup-prompt">
+                Already have an account?{" "}
+                <a href="/login" className="signup-link">
+                    Sign in
+                </a>
+            </p>
+            {message && (
+                <p className={isSuccess ? "success-message" : "error-message"}>
+                    {message}
+                </p>
+            )}
+        </div>
     );
-};
+}
 
-export default UserRegistration;
+export default RegisterPage;

@@ -13,6 +13,31 @@ const getLoginIdByUsername = (username) => {
         });
     });
 };
+
+const createUser = (userData) => {
+    return new Promise((resolve, reject) => {
+        const sql = `INSERT INTO login (login_user, login_pass) VALUES (?, ?)`;
+        con.query(
+            sql,
+            [userData.username, userData.password],
+            (err, result) => {
+                if (err) return reject(err);
+                resolve(result.insertId);
+            }
+        );
+    });
+};
+
+const getUserByUsernameAndPassword = (username, password) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM login WHERE login_user = ? AND login_pass = ?`;
+        con.query(sql, [username, password], (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0]);
+        });
+    });
+};
+
 const profileExistsForUsername = (loginId) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT vol_id FROM volunteer WHERE login_id = ?";
@@ -22,6 +47,7 @@ const profileExistsForUsername = (loginId) => {
         });
     });
 };
+
 const createProfile = async (profileData) => {
     try {
         const loginId = await getLoginIdByUsername(profileData.username);
@@ -157,9 +183,11 @@ const deleteProfile = (id) => {
 
 module.exports = {
     getLoginIdByUsername,
+    createUser,
     createProfile,
     getAllProfiles,
     getProfileById,
+    getUserByUsernameAndPassword,
     updateProfile,
     deleteProfile,
 };

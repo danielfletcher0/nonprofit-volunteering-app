@@ -1,8 +1,6 @@
+const db = require("../database/db");
 const express = require("express");
 const router = express.Router();
-
-// Mock data for registered users
-let users = [];
 
 // Validation function to check required fields
 const validateRegistration = (user) => {
@@ -12,10 +10,10 @@ const validateRegistration = (user) => {
     if (
         !user.username ||
         user.username.length < 3 ||
-        user.username.length > 50
+        user.username.length > 8
     ) {
         errors.push(
-            "Username is required and must be between 3 and 50 characters."
+            "Username is required and must be between 3 and 8 characters."
         );
     }
 
@@ -26,47 +24,33 @@ const validateRegistration = (user) => {
         );
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!user.email) {
-        errors.push("Missing required fields");
-    } else if (!emailRegex.test(user.email)) {
-        errors.push("Invalid email format");
-    }
-
     return errors;
 };
 
 // POST route to handle registration
-router.post("/", (req, res) => {
-    const { username, password, email } = req.body;
-
-    // Validate registration data
-    const newUser = { username, password, email };
+router.post("/", async (req, res) => {
+    const { username, password } = req.body;
+    const newUser = { username, password };
     const validationErrors = validateRegistration(newUser);
 
-    // If there are validation errors, return them
     if (validationErrors.length > 0) {
         return res.status(400).json({ message: validationErrors[0] });
     }
 
-    // Check if the username already exists
-    const existingUser = users.find((user) => user.username === username);
-    if (existingUser) {
-        return res.status(409).json({ message: "Username already exists" });
+    try {
+        console.log("Received registration data:", newUser);
+        const userId = await db.createUser(newUser);
+        res.status(201).json({
+            message: "User registered successfully",
+            userId,
+        });
+    } catch (error) {
+        console.error("Detailed error during registration:", error);
+        res.status(500).json({
+            message: "Error registering user",
+            error: error.message,
+        });
     }
-
-    // Add new user to the mock database
-    users.push(newUser);
-    res.status(201).json({
-        message: "User registered successfully",
-        user: newUser,
-    });
-});
-
-// GET route to return all registered users (for testing/demo purposes)
-router.get("/", (req, res) => {
-    res.json(users);
 });
 
 module.exports = router;
