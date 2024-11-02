@@ -135,11 +135,107 @@ const deleteProfile = (id) => {
     });
 };
 
+// EVENTS
+
+// Create an Event
+const createEvent = async (eventData) => {
+    try {
+
+        return new Promise((resolve, reject) => {
+            const {admin_id, event_name, description, location, skills, date, urgency} = eventData;
+            const sql = `INSERT INTO event(admin_id, event_name, description, location, skills, date, urgency) 
+                         VALUES (1, ?, ?, ?, ?, ?, ?)`;
+
+            con.query(
+                sql,
+                [
+                    admin_id,
+                    event_name,
+                    description,
+                    location,
+                    skills,
+                    JSON.stringify(date),
+                    urgency,
+                ],
+                (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(result.insertId);
+                }
+            );
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
+// Get list of All Events
+const getAllEvents = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM event";
+        con.query(sql, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
+
+const deleteEvent = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = "DELETE FROM volunteer WHERE vol_id = ?";
+        con.query(sql, [id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
+// Gets all Events by a specific Volunteer ID
+const getEventByVol = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM event WHERE vol_id = ?";
+        con.query(sql, [id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result)
+        });
+    });
+};
+//////////////////////////////////////
+//Get specific Volunteer ID
+const getV_IDbyName = (name) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT vol_id FROM volunteer WHERE full_name = ?";
+        con.query(sql, [id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result)
+        });
+    });
+};
+
+//
+
+
 module.exports = {
     getLoginIdByUsername,
     createProfile,
     getAllProfiles,
     getProfileById,
     updateProfile,
-    deleteProfile
+    deleteProfile,
+    //////////
+    createEvent,
+    getAllEvents,
+    deleteEvent,
+    getEventByVol,
+    ///////////
+    getV_IDbyName
 };

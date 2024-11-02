@@ -81,9 +81,9 @@ const EventCreation = () => {
                 <div className="event-form-group">
                     <label htmlFor="urgency">Urgency</label>
                     <select onChange={handleInputChange} id="urgency" name="urgency">
-                        <option value="low">Standard</option>
-                        <option value="medium">Priority</option>
-                        <option value="high">High Priority</option>
+                        <option value="L">Standard</option>
+                        <option value="M">Priority</option>
+                        <option value="H">High Priority</option>
                     </select>
                 </div>
                 <div className="event-form-group">
