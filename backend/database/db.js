@@ -214,6 +214,20 @@ const getEventByVol = (id) => {
 const getEventID = (name) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT event_id FROM event WHERE event_name = ?";
+        con.query(sql, [name], (err, result) => {
+            if (err) {
+                console.log('No event ID from this name');
+                return reject(err);
+            }
+            resolve(result[0]);
+        });
+    });
+};
+
+// Get Event by Event_ID
+const getEventbyID = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
                 console.log('No event ID from this name');
@@ -223,12 +237,13 @@ const getEventID = (name) => {
         });
     });
 };
+
 //////////////////////////////////////
 // Get specific Volunteer ID
 const getV_IDbyName = (name) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT vol_id FROM volunteer WHERE full_name = ?";
-        con.query(sql, [id], (err, result) => {
+        con.query(sql, [name], (err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -272,6 +287,7 @@ module.exports = {
     //////////
     createEvent,
     getAllEvents,
+    getEventbyID,
     deleteEvent,
     getEventByVol,
     getEventID,
