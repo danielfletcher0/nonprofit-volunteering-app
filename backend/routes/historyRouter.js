@@ -1,46 +1,21 @@
 const express = require('express');
 const router = express.Router();
-
-// Mock data for volunteer history
-const volunteerHistory = {
-    "John Doe": [
-        {
-            name: "Beach Cleanup",
-            description: "Cleaning up the beach to promote a cleaner environment.",
-            location: "California Beach",
-            skills: "Teamwork, Physical fitness",
-            date: "2023-06-15"
-        },
-        {
-            name: "Food Drive",
-            description: "Collecting food donations for local shelters.",
-            location: "Community Center",
-            skills: "Organizational skills, Communication",
-            date: "2023-07-20"
-        }
-    ],
-    "Jane Smith": [], // No participation
-    "Alice Johnson": [
-        {
-            name: "Park Renovation",
-            description: "Renovating the local park with new facilities.",
-            location: "Central Park",
-            skills: "Landscaping, Painting",
-            date: "2023-08-10"
-        }
-    ],
-};
+const db = require('../database/db'); // Import the database functions
 
 // Route to get all volunteer names
-router.get('/volunteers', (req, res) => {
-    console.log('Request received for volunteer names'); // Debug log
-    const volunteerNames = Object.keys(volunteerHistory);
-    console.log('Volunteer names:', volunteerNames); // Debug log
-    res.json(volunteerNames);
+router.get('/volunteers', async (req, res) => {
+    try {
+        const volunteers = await db.getAllVol(); // Fetch all volunteers from the database
+        const volunteerNames = volunteers.map(volunteer => volunteer.full_name);
+        res.json(volunteerNames);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error retrieving volunteer names' });
+    }
 });
 
 // Route to get volunteer history by name
-router.get('/:volunteerName', (req, res) => {
+router.get('/:volunteerName', async (req, res) => {
     const volunteerName = req.params.volunteerName;
 
     // Validate volunteer name length
@@ -48,9 +23,20 @@ router.get('/:volunteerName', (req, res) => {
         return res.status(400).json({ message: 'Invalid volunteer name length' });
     }
 
-    const historyItems = volunteerHistory[volunteerName] || []; // Default to empty array
+    try {
+        const volunteerIdResult = await db.getV_IDbyName(volunteerName);
+        if (volunteerIdResult.length === 0) {
+            return res.status(404).json({ message: 'Volunteer not found' });
+        }
+        
+        const volunteerId = volunteerIdResult[0].vol_id; // Get the volunteer ID
+        const historyItems = await db.getVolunteerHistoryByUserId(volunteerId); // Fetch the history
 
-    res.json(historyItems); // Always return an array, even if empty
+        res.json(historyItems); // Return the history items
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error retrieving volunteer history' });
+    }
 });
 
 module.exports = router;
