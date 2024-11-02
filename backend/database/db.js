@@ -276,6 +276,41 @@ const getAllVolHist = () => {
         });
     });
 };
+////////////////////////////////////////////
+// Authenticate function for Login User/Pass, If this doesn't work, edit or re-implement
+function authenticateUser(username, password, callback) {
+	const connection = mysql.createConnection(config);
+
+	connection.connect((err) => {
+		if (err) {
+			console.error('error connecting: ' + err.stack);
+			callback(err);
+			return;
+		}
+		// console.log('connected as id ' + connection.threadId);
+
+		connection.query(
+			'SELECT * FROM login WHERE login_user = ? AND login_pass = ?',
+			[username, password],
+			(error, results, fields) => {
+				// Release the connection
+				connection.end();
+
+				if (error) {
+					console.error('Query Error: ' + error.stack);
+					callback(error);
+					return;
+				}
+
+				if (results.length === 0) {
+					callback(null, null);
+				} else {
+					callback(null, results[0]);
+				}
+			}
+		);
+	});
+}
 
 module.exports = {
     getLoginIdByUsername,
@@ -294,5 +329,8 @@ module.exports = {
     ///////////
     getV_IDbyName,
     getAllVol,
-    getAllVolHist
+    getAllVolHist,
+    ////////////////
+    authenticateUser
+
 };
