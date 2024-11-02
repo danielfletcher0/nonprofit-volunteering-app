@@ -1,4 +1,4 @@
-const con = require('../connection'); 
+const con = require("../connection");
 
 const getLoginIdByUsername = (username) => {
     return new Promise((resolve, reject) => {
@@ -13,15 +13,41 @@ const getLoginIdByUsername = (username) => {
         });
     });
 };
+
+const createUser = (userData) => {
+    return new Promise((resolve, reject) => {
+        const sql = `INSERT INTO login (login_user, login_pass) VALUES (?, ?)`;
+        con.query(
+            sql,
+            [userData.username, userData.password],
+            (err, result) => {
+                if (err) return reject(err);
+                resolve(result.insertId);
+            }
+        );
+    });
+};
+
+const getUserByUsernameAndPassword = (username, password) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM login WHERE login_user = ? AND login_pass = ?`;
+        con.query(sql, [username, password], (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0]);
+        });
+    });
+};
+
 const profileExistsForUsername = (loginId) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT vol_id FROM volunteer WHERE login_id = ?";
         con.query(sql, [loginId], (err, result) => {
             if (err) return reject(err);
-            resolve(result.length > 0); 
+            resolve(result.length > 0);
         });
     });
 };
+
 const createProfile = async (profileData) => {
     try {
         const loginId = await getLoginIdByUsername(profileData.username);
@@ -33,7 +59,17 @@ const createProfile = async (profileData) => {
         }
 
         return new Promise((resolve, reject) => {
-            const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = profileData;
+            const {
+                fullName,
+                address1,
+                address2,
+                city,
+                state,
+                zip,
+                skills,
+                preferences,
+                availability,
+            } = profileData;
             const sql = `INSERT INTO volunteer (login_id, full_name, address, address2, city, state, zipcode, skills, preferences, availability) 
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -49,7 +85,7 @@ const createProfile = async (profileData) => {
                     zip,
                     JSON.stringify(skills),
                     preferences,
-                    JSON.stringify(availability)
+                    JSON.stringify(availability),
                 ],
                 (err, result) => {
                     if (err) {
@@ -92,7 +128,17 @@ const getProfileById = (id) => {
 // Function to update an existing profile by ID
 const updateProfile = (id, profileData) => {
     return new Promise((resolve, reject) => {
-        const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = profileData;
+        const {
+            fullName,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            skills,
+            preferences,
+            availability,
+        } = profileData;
 
         const sql = `UPDATE volunteer 
                      SET full_name = ?, address = ?, address2 = ?, city = ?, state = ?, zipcode = ?, skills = ?, preferences = ?, availability = ?
@@ -101,16 +147,16 @@ const updateProfile = (id, profileData) => {
         con.query(
             sql,
             [
-                fullName,            
-                address1,            
-                address2,           
-                city,               
-                state,               
-                zip,                
-                JSON.stringify(skills), 
-                preferences,        
-                JSON.stringify(availability), 
-                id                   
+                fullName,
+                address1,
+                address2,
+                city,
+                state,
+                zip,
+                JSON.stringify(skills),
+                preferences,
+                JSON.stringify(availability),
+                id,
             ],
             (err, result) => {
                 if (err) {
@@ -140,9 +186,16 @@ const deleteProfile = (id) => {
 // Create an Event
 const createEvent = async (eventData) => {
     try {
-
         return new Promise((resolve, reject) => {
-            const {admin_id, event_name, description, location, skills, date, urgency} = eventData;
+            const {
+                admin_id,
+                event_name,
+                description,
+                location,
+                skills,
+                date,
+                urgency,
+            } = eventData;
             const sql = `INSERT INTO event(admin_id, event_name, description, location, skills, date, urgency) 
                          VALUES (1, ?, ?, ?, ?, ?, ?)`;
 
@@ -188,7 +241,7 @@ const deleteEvent = (id) => {
         const sql = "DELETE FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
-                console.log('No Event by this ID');
+                console.log("No Event by this ID");
                 return reject(err);
             }
             resolve(result);
@@ -202,10 +255,10 @@ const getEventByVol = (id) => {
         const sql = "SELECT * FROM event WHERE vol_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
-                console.log('No event for this Volunteer');
+                console.log("No event for this Volunteer");
                 return reject(err);
             }
-            resolve(result)
+            resolve(result);
         });
     });
 };
@@ -216,7 +269,7 @@ const getEventID = (name) => {
         const sql = "SELECT event_id FROM event WHERE event_name = ?";
         con.query(sql, [name], (err, result) => {
             if (err) {
-                console.log('No event ID from this name');
+                console.log("No event ID from this name");
                 return reject(err);
             }
             resolve(result[0]);
@@ -230,7 +283,7 @@ const getEventbyID = (id) => {
         const sql = "SELECT * FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
-                console.log('No event ID from this name');
+                console.log("No event ID from this name");
                 return reject(err);
             }
             resolve(result[0]);
@@ -247,7 +300,7 @@ const getV_IDbyName = (name) => {
             if (err) {
                 return reject(err);
             }
-            resolve(result)
+            resolve(result);
         });
     });
 };
@@ -276,41 +329,6 @@ const getAllVolHist = () => {
         });
     });
 };
-////////////////////////////////////////////
-// Authenticate function for Login User/Pass, If this doesn't work, edit or re-implement
-function authenticateUser(username, password, callback) {
-	const connection = mysql.createConnection(config);
-
-	connection.connect((err) => {
-		if (err) {
-			console.error('error connecting: ' + err.stack);
-			callback(err);
-			return;
-		}
-		// console.log('connected as id ' + connection.threadId);
-
-		connection.query(
-			'SELECT * FROM login WHERE login_user = ? AND login_pass = ?',
-			[username, password],
-			(error, results, fields) => {
-				// Release the connection
-				connection.end();
-
-				if (error) {
-					console.error('Query Error: ' + error.stack);
-					callback(error);
-					return;
-				}
-
-				if (results.length === 0) {
-					callback(null, null);
-				} else {
-					callback(null, results[0]);
-				}
-			}
-		);
-	});
-}
 
 // Function to retrieve volunteer history for a specific user ID
 const getVolunteerHistoryByUserId = (userId) => {
@@ -341,9 +359,11 @@ const addVolunteerEntry = (volId, eventId) => {
 
 module.exports = {
     getLoginIdByUsername,
+    createUser,
     createProfile,
     getAllProfiles,
     getProfileById,
+    getUserByUsernameAndPassword,
     updateProfile,
     deleteProfile,
     getVolunteerHistoryByUserId,
@@ -360,6 +380,10 @@ module.exports = {
     getAllVol,
     getAllVolHist,
     ////////////////
+<<<<<<< HEAD
     authenticateUser
 
 };
+=======
+};
+>>>>>>> 57ae613ed7359eb9b454b284059c8541b2d6cbb7
