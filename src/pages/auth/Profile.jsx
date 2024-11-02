@@ -68,7 +68,7 @@ const initialSkillsOptions = [
 // ADASDAW BTVRAWBTXAWIDEBUYAWRYOTWORAEWIAYBWBTAWETIYOBRAEWIRYAEWRIYAEBTWITRAEWIYBTRYAEWIAEWIORBAEWIORTAEWIOAEWTOIRAEWI
 
 function Profile() {
-  const [formData, setFormData] = useState({ fullName: '', address1: '', address2: '', city: '', state: '', zip: '', skills: [], preferences: '', availability: [''], // Start with one empty date field
+  const [formData, setFormData] = useState({ username: '', fullName: '', address1: '', address2: '', city: '', state: '', zip: '', skills: [], preferences: '', availability: [''], 
 });
 
   const [errors, setErrors] = useState({});
@@ -197,6 +197,16 @@ function Profile() {
         <br></br>
         <br></br>
       <form onSubmit={handleSubmit}>
+      <div>
+        <label>Username</label>
+        <input
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
         <div>
             <label className="font-medium">Full Name </label>
           <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" maxLength="50" required />

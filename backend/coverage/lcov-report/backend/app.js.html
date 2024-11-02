@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/24</span>
+                <span class='fraction'>28/30</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/24</span>
+                <span class='fraction'>28/30</span>
             </div>
         
             
@@ -102,7 +102,8 @@
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -120,13 +121,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -134,60 +130,67 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const app = express();
 &nbsp;
 app.use(cors()); // Enable CORS
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.json());  // Parse incoming JSON data
+app.use(express.json()); // Parse incoming JSON data
 app.use(bodyParser.json());
 &nbsp;
-app.get('/', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+app.get("/", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >    res.send("Welcome to the API!"); </span>// Or any other message you'd like
 });
 &nbsp;
 // Import your route files
-const eventRouter = require('./routes/eventRouter');
-const eventHRouter = require('./routes/eventHRouter');
-const historyRouter = require('./routes/historyRouter');
-//const homeRouter = require('./routes/homeRouter');
-//const loginRouter = require('./routes/LoginRouter');
-const matchRouter = require('./routes/matchRouter');
-const profileRouter = require('./routes/ProfileRouter');
-//const registerRouter = require('./routes/RegisterRouter');
+const eventRouter = require("./routes/eventRouter");
+const eventHRouter = require("./routes/eventHRouter");
+const historyRouter = require("./routes/historyRouter");
+const homeRouter = require("./routes/homeRouter");
+const loginRouter = require("./routes/loginRouter");
+const matchRouter = require("./routes/matchRouter");
+const profileRouter = require("./routes/ProfileRouter");
+const registerRouter = require("./routes/registerRouter");
 &nbsp;
 // Use the routers and define their base paths
-app.use('/events', eventRouter);
-app.use('/event-history', eventHRouter);
-app.use('/history', historyRouter); 
-//app.use('/home', homeRouter); 
-//app.use('/login', loginRouter); 
-app.use('/match', matchRouter);
-app.use('/profile', profileRouter); 
-//app.use('/register', registerRouter); 
+app.use("/events", eventRouter);
+app.use("/event-history", eventHRouter);
+app.use("/history", historyRouter);
+app.use("/home", homeRouter);
+app.use("/login", loginRouter);
+app.use("/match", matchRouter);
+app.use("/profile", profileRouter);
+app.use("/register", registerRouter);
 &nbsp;
 const PORT = 4000;
 app.listen(PORT, <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    console.log(`Server is running on port ${PORT}`);</span>
 });
 &nbsp;
-module.exports = app;</pre></td></tr></table></pre>
+module.exports = app;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-20T04:32:38.697Z
+                at 2024-11-02T00:55:05.894Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -6,6 +6,13 @@ const db = require('../database/db'); // Import the database functions
 const validateProfile = (profile) => {
     let errors = [];
 
+    if (!profile.username) {
+        errors.push('Username is required.');
+      }
+      if (!profile.fullName || profile.fullName.length > 50) {
+        errors.push('Full Name is required and must be less than 50 characters.');
+      }
+
     // Full Name Validation
     if (!profile.fullName || profile.fullName.length > 50) {
         errors.push('Full Name is required and must be less than 50 characters.');
@@ -49,26 +56,31 @@ const validateProfile = (profile) => {
     return errors;
 };
 
-// Create a new profile
 router.post('/create', async (req, res) => {
-    const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = req.body;
-
-    // Validate profile data
-    const newProfile = { fullName, address1, address2, city, state, zip, skills, preferences, availability };
+    const { username, fullName, address1, address2, city, state, zip, skills, preferences, availability } = req.body;
+  
+    // Log the data being sent from the frontend
+    console.log('Received profile data:', req.body);
+  
+    const newProfile = { username, fullName, address1, address2, city, state, zip, skills, preferences, availability };
     const validationErrors = validateProfile(newProfile);
-
+  
     if (validationErrors.length > 0) {
-        return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
+      console.log('Validation errors:', validationErrors);
+      return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
-
+  
     try {
-        // Call db function to add profile to the database
-        const profileId = await db.createProfile(newProfile);
-        res.status(201).json({ message: 'Profile created successfully', profileId });
+      const profileId = await db.createProfile(newProfile);
+      console.log('Profile created with ID:', profileId);
+      res.status(201).json({ message: 'Profile created successfully', profileId });
     } catch (error) {
-        res.status(500).json({ message: 'Error adding profile to database', error: error.message });
+      console.error('Error adding profile to database:', error);
+      res.status(500).json({ message: 'Error adding profile to database', error: error.message });
     }
-});
+  });
+
+
 
 // Get all profiles
 router.get('/', async (req, res) => {

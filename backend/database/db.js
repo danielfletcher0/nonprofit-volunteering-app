@@ -1,38 +1,68 @@
-const con = require('./connection'); // Adjust path if needed
+const con = require('../connection'); 
 
-// Function to create a new profile in the volunteer table
-const createProfile = (profileData) => {
+const getLoginIdByUsername = (username) => {
     return new Promise((resolve, reject) => {
-        const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = profileData;
-
-        // Insert query with exact column names as in the volunteer table
-        const sql = `INSERT INTO volunteer (full_name, address, address2, city, state, zipcode, skills, preferences, availability) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-        // Execute query with values passed in as an array
-        con.query(
-            sql,
-            [
-                fullName,            
-                address1,           
-                address2,            
-                city,                
-                state,               
-                zip,                 
-                JSON.stringify(skills), 
-                preferences,         
-                JSON.stringify(availability) 
-            ],
-            (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result.insertId); // Return the inserted profile ID
+        const sql = "SELECT login_id FROM login WHERE login_user = ?";
+        con.query(sql, [username], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0].login_id);
+            } else {
+                reject(new Error("Username not found"));
             }
-        );
+        });
     });
 };
+const profileExistsForUsername = (loginId) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT vol_id FROM volunteer WHERE login_id = ?";
+        con.query(sql, [loginId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result.length > 0); 
+        });
+    });
+};
+const createProfile = async (profileData) => {
+    try {
+        const loginId = await getLoginIdByUsername(profileData.username);
 
+        // Check if a profile already exists for this login_id
+        const profileExists = await profileExistsForUsername(loginId);
+        if (profileExists) {
+            throw new Error("A profile already exists for this username.");
+        }
+
+        return new Promise((resolve, reject) => {
+            const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = profileData;
+            const sql = `INSERT INTO volunteer (login_id, full_name, address, address2, city, state, zipcode, skills, preferences, availability) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+            con.query(
+                sql,
+                [
+                    loginId,
+                    fullName,
+                    address1,
+                    address2,
+                    city,
+                    state,
+                    zip,
+                    JSON.stringify(skills),
+                    preferences,
+                    JSON.stringify(availability)
+                ],
+                (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(result.insertId);
+                }
+            );
+        });
+    } catch (err) {
+        throw err;
+    }
+};
 // Function to retrieve all profiles from the volunteer table
 const getAllProfiles = () => {
     return new Promise((resolve, reject) => {
@@ -106,6 +136,7 @@ const deleteProfile = (id) => {
 };
 
 module.exports = {
+    getLoginIdByUsername,
     createProfile,
     getAllProfiles,
     getProfileById,
