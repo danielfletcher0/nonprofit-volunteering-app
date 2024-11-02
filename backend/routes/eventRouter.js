@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../database/db');
 
 let events = [];
 
@@ -41,7 +42,7 @@ const validateEvent = (event) => {
 };
 
 // Create a new event 
-router.post('/create', (req, res) => {
+router.post('/create', async(req, res) => {
     const { name, description, location, skill, urgency, availability } = req.body;
 
     // Validate event data
@@ -52,27 +53,42 @@ router.post('/create', (req, res) => {
         return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
 
-    newEvent.id = events.length;  
-    events.push(newEvent);
-
-    res.status(201).json({ message: 'Event created successfully', event: newEvent });
+    try {
+        const eventID = await db.createEvent(newEvent);
+        console.log('Event created with ID:', eventID);
+        res.status(201).json({ message: 'Event created successfully', eventID });
+      } catch (error) {
+        console.error('Error adding event to database:', error);
+        res.status(500).json({ message: 'Error adding event to database', error: error.message });
+      }
 });
 
 // Get all events
-router.get('/', (req, res) => {
-    res.json(events);
+router.get('/', async(req, res) => {
+    try {
+        const events = await db.getAllEvents();
+        res.json(events);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving events from database', error: error.message });
+    }
 });
 
 // Get an event by ID
-router.get('/:id', (req, res) => {
-    const event = events.find(p => p.id == req.params.id);  
-
-    if (!event) {
-        return res.status(404).json({ message: 'Event not found' });
+router.get('/:id', async (req, res) => {
+    try {
+        const profile = await db.getEventByVol(req.params.id);
+        if (!profile) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.json(profile);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving profile from database', error: error.message });
     }
-
-    res.json(event);
 });
+
+/*
+
+IMPLEMENTING LATER OR DECIDING TO MAYBE NOT ALLOW UPDATING EVENT IMPORTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANT
 
 // Update an event (PUT /events/:id)
 router.put('/:id', (req, res) => {
@@ -100,17 +116,19 @@ router.put('/:id', (req, res) => {
 
     res.json({ message: 'Event updated successfully', event });
 });
+*/ 
 
 // Delete an event (DELETE /events/:id)
-router.delete('/:id', (req, res) => {
-    const eventIndex = events.findIndex(p => p.id == req.params.id);  
-
-    if (eventIndex === -1) {
-        return res.status(404).json({ message: 'Event not found' });
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await db.deleteEvent(req.params.id);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        res.json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting event from database', error: error.message });
     }
-
-    events.splice(eventIndex, 1);
-    res.json({ message: 'Event deleted successfully' });
 });
 
 module.exports = router;

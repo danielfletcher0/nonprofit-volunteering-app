@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
     }
 
     try {
-        console.log("Login attempt with:", { username }); // Debug log
+        console.log("Login attempt with:", { username });
         const user = await db.getUserByUsernameAndPassword(username, password);
         if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 
         res.status(200).json({ message: "Login successful" });
     } catch (error) {
-        console.error("Error during login:", error); // Detailed log
+        console.error("Error during login:", error);
         res.status(500).json({
             message: "Error during login",
             error: error.message,
