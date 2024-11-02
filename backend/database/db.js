@@ -1,4 +1,4 @@
-const con = require('./connection'); // Adjust path if needed
+const con = require('../connection'); // Adjust path if needed
 
 // Function to create a new profile in the volunteer table
 const createProfile = (profileData) => {
