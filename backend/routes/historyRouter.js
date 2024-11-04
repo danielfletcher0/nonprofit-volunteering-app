@@ -29,10 +29,14 @@ router.get('/:volunteerName', async (req, res) => {
             return res.status(404).json({ message: 'Volunteer not found' });
         }
         
-        const volunteerId = volunteerIdResult[0].vol_id; // Get the volunteer ID
-        const historyItems = await db.getVolunteerHistoryByUserId(volunteerId); // Fetch the history
-
-        res.json(historyItems); // Return the history items
+        console.log("Found Volunteer ID:", volunteerIdResult[0].vol_id);  // Log the ID
+        const volunteerId = volunteerIdResult[0].vol_id;
+        const historyItems = await db.getVolunteerHistoryByUserId(volunteerId);
+        
+        if (historyItems.length === 0) {
+            return res.json({ message: 'No history found for this volunteer.' });
+        }
+        res.json(historyItems);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error retrieving volunteer history' });

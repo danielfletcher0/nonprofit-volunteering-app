@@ -345,7 +345,7 @@ const getVolunteerHistoryByUserId = (userId) => {
     return new Promise((resolve, reject) => {
         const sql = `
             SELECT e.event_name, e.description, e.location, e.skills, e.date, vh.events_attended
-            FROM VolunteerHistory vh
+            FROM volunteer_history vh
             JOIN Event e ON vh.event_id = e.event_id
             WHERE vh.vol_id = ?`  // Use vol_id to match your schema
         ;
@@ -359,7 +359,7 @@ const getVolunteerHistoryByUserId = (userId) => {
 // Function to add a new entry to the volunteer history
 const addVolunteerEntry = (volId, eventId) => {
     return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO VolunteerHistory (vol_id, event_id, participation_date) VALUES (?, ?, NOW())";
+        const sql = "INSERT INTO volunteer_history (vol_id, event_id, participation_date) VALUES (?, ?, NOW())";
         con.query(sql, [volId, eventId], (err, result) => {
             if (err) return reject(err);
             resolve(result.insertId);
@@ -391,10 +391,4 @@ module.exports = {
     getAllVol,
     getAllVolHist,
     ////////////////
-<<<<<<< HEAD
-    authenticateUser
-
 };
-=======
-};
->>>>>>> 57ae613ed7359eb9b454b284059c8541b2d6cbb7

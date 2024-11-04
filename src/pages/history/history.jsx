@@ -44,11 +44,11 @@ const VolunteerHistory = () => {
                 } else {
                     const tableRows = historyItems.map(item => `
                         <tr>
-                            <td>${item.name}</td>
+                            <td>${item.event_name}</td>
                             <td>${item.description}</td>
                             <td>${item.location}</td>
                             <td>${item.skills}</td>
-                            <td>${item.date}</td>
+                            <td>${new Date(item.date).toLocaleDateString()}</td>
                         </tr>
                     `).join('');
                     setHistoryDisplay(`
