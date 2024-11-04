@@ -12,19 +12,6 @@ const VolunteerMatching = () => {
     const [matchedVolunteers, setMatchedVolunteers] = useState(new Set());
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Fetch matched volunteers when the component mounts
-    useEffect(() => {
-        const fetchMatchedVolunteers = async () => {
-            const response = await fetch('http://localhost:4000/match/matched-volunteers');
-            if (response.ok) {
-                const data = await response.json();
-                const matchedSet = new Set(data.map(match => match.volunteerName));
-                setMatchedVolunteers(matchedSet);
-            }
-        };
-        fetchMatchedVolunteers();
-    }, []);
-
     const fetchVolunteerSuggestions = async (name) => {
         setLoading(true);
         setErrorMessage('');
@@ -33,7 +20,7 @@ const VolunteerMatching = () => {
             const response = await fetch(`http://localhost:4000/match/suggestions/${name}`);
             if (response.ok) {
                 const volunteers = await response.json();
-                const availableVolunteers = volunteers.filter(vol => !matchedVolunteers.has(vol.name));
+                const availableVolunteers = volunteers.filter(vol => !matchedVolunteers.has(vol.full_name));
                 setSuggestions(availableVolunteers.slice(0, 5));
 
                 if (availableVolunteers.length === 0) {
@@ -44,6 +31,7 @@ const VolunteerMatching = () => {
                 setErrorMessage('Error fetching suggestions.');
             }
         } catch (error) {
+            console.error("Fetch Error:", error);
             setSuggestions([]);
             setErrorMessage('Error fetching suggestions.');
         } finally {
@@ -64,19 +52,27 @@ const VolunteerMatching = () => {
     };
 
     const handleSuggestionClick = async (suggestion) => {
-        setVolunteerName(suggestion.name);
+        setVolunteerName(suggestion.full_name);
         setSuggestions([]);
         setErrorMessage('');
 
-        const response = await fetch(`http://localhost:4000/match/${suggestion.name}`);
-        if (response.ok) {
-            const events = await response.json();
-            setMatchedEvents(events);
+        // Fetch events for the selected volunteer
+        try {
+            const response = await fetch(`http://localhost:4000/match/events/${suggestion.full_name}`);
+            if (response.ok) {
+                const events = await response.json();
+                setMatchedEvents(events);
 
-            if (events.length === 0) {
-                setErrorMessage('No events found for this volunteer.');
+                if (events.length === 0) {
+                    setErrorMessage('No events found for this volunteer.');
+                }
+            } else {
+                const errorData = await response.json();
+                setErrorMessage(`Error fetching events: ${errorData.message}`);
+                setMatchedEvents([]);
             }
-        } else {
+        } catch (error) {
+            console.error("Error fetching events:", error);
             setErrorMessage('Error fetching events.');
             setMatchedEvents([]);
         }
@@ -100,20 +96,29 @@ const VolunteerMatching = () => {
             return;
         }
 
-        const confirmMatch = window.confirm(`Are you sure you want to match ${volunteerName} to ${selectedEvent}?`);
+        // Find the selected event object
+        const selectedEventData = matchedEvents.find(event => event.event_id === parseInt(selectedEvent));
+        
+        if (!selectedEventData) {
+            setErrorMessage('Selected event not found.');
+            return;
+        }
+
+        const confirmMatch = window.confirm(`Are you sure you want to match ${volunteerName} to ${selectedEventData.event_name}?`);
         if (confirmMatch) {
             setMatchedVolunteers(prev => new Set(prev).add(volunteerName));
-            setMatchedEvents(prev => prev.filter(event => event.title !== selectedEvent));
-            setSuccessMessage(`${volunteerName} was successfully matched to ${selectedEvent}!`);
+            setMatchedEvents(prev => prev.filter(event => event.event_id !== selectedEventData.event_id));
+            setSuccessMessage(`${volunteerName} was successfully matched to ${selectedEventData.event_name}!`);
             setIsSuccessVisible(true);
 
             // Save the match to the backend
             await fetch('http://localhost:4000/match/matched-volunteers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ volunteerName, eventTitle: selectedEvent })
+                body: JSON.stringify({ volunteerName, eventId: selectedEventData.event_id })
             });
 
+            // Reset fields
             setVolunteerName('');
             setSelectedEvent('');
             setSuggestions([]);
@@ -131,7 +136,7 @@ const VolunteerMatching = () => {
     return (
         <section className="volunteer-matching container">
             <header style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <h1 className="text-4xl font-bold">Volunteer Matching Form</h1>
+                <h1 className="text-4xl font-bold">Volunteer Matching Form</h1>
             </header>
             <main>
                 <div className="form-group">
@@ -147,8 +152,8 @@ const VolunteerMatching = () => {
                     {suggestions.length > 0 && (
                         <ul className="suggestions-dropdown show">
                             {suggestions.map(suggestion => (
-                                <li key={suggestion.id} onClick={() => handleSuggestionClick(suggestion)}>
-                                    {suggestion.name}
+                                <li key={suggestion.vol_id} onClick={() => handleSuggestionClick(suggestion)}>
+                                    {suggestion.full_name}
                                 </li>
                             ))}
                         </ul>
@@ -174,8 +179,8 @@ const VolunteerMatching = () => {
                         >
                             <option value="">-- Select an event --</option>
                             {matchedEvents.map(event => (
-                                <option key={event.id} value={event.title}>
-                                    {event.title}
+                                <option key={event.event_id} value={event.event_id}>
+                                    {event.event_name}
                                 </option>
                             ))}
                         </select>

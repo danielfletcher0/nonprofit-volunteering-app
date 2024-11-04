@@ -239,8 +239,10 @@ const getAllEvents = () => {
         const sql = "SELECT * FROM event";
         con.query(sql, (err, results) => {
             if (err) {
+                console.error("Error fetching events:", err); // Log the error
                 return reject(err);
             }
+            console.log("Fetched Events:", results); // Log the fetched results
             resolve(results);
         });
     });
@@ -305,7 +307,7 @@ const getEventbyID = (id) => {
 // Get specific Volunteer ID
 const getV_IDbyName = (name) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT vol_id FROM volunteer WHERE full_name = ?";
+        const sql = "SELECT * FROM volunteer WHERE full_name = ?";
         con.query(sql, [name], (err, result) => {
             if (err) {
                 return reject(err);
@@ -367,6 +369,16 @@ const addVolunteerEntry = (volId, eventId) => {
     });
 };
 
+const matchVolunteerToEvent = (volId, eventId) => {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE event SET matched = TRUE, vol_id = ? WHERE event_id = ? AND matched = FALSE`;
+        con.query(sql, [volId, eventId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result.affectedRows > 0); // Returns true if the match was successful
+        });
+    });
+};
+
 module.exports = {
     getLoginIdByUsername,
     createUser,
@@ -391,4 +403,5 @@ module.exports = {
     getAllVol,
     getAllVolHist,
     ////////////////
+    matchVolunteerToEvent
 };
