@@ -379,6 +379,20 @@ const matchVolunteerToEvent = (volId, eventId) => {
     });
 };
 
+// Function to update the event with volunteer's ID and change matched status
+const updateEventWithVolunteer = (eventId, volId) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            UPDATE event 
+            SET vol_id = ?, matched = 1 
+            WHERE event_id = ?`;
+        con.query(sql, [volId, eventId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result.affectedRows > 0); // Returns true if the update was successful
+        });
+    });
+};
+
 module.exports = {
     getLoginIdByUsername,
     createUser,
@@ -403,5 +417,6 @@ module.exports = {
     getAllVol,
     getAllVolHist,
     ////////////////
-    matchVolunteerToEvent
+    matchVolunteerToEvent,
+    updateEventWithVolunteer
 };

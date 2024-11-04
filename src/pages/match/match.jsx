@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import "./match.css";
 
 const VolunteerMatching = () => {
@@ -11,6 +11,7 @@ const VolunteerMatching = () => {
     const [isSuccessVisible, setIsSuccessVisible] = useState(false);
     const [matchedVolunteers, setMatchedVolunteers] = useState(new Set());
     const [successMessage, setSuccessMessage] = useState('');
+    const [matchingLoading, setMatchingLoading] = useState(false);
 
     const fetchVolunteerSuggestions = async (name) => {
         setLoading(true);
@@ -20,12 +21,7 @@ const VolunteerMatching = () => {
             const response = await fetch(`http://localhost:4000/match/suggestions/${name}`);
             if (response.ok) {
                 const volunteers = await response.json();
-                const availableVolunteers = volunteers.filter(vol => !matchedVolunteers.has(vol.full_name));
-                setSuggestions(availableVolunteers.slice(0, 5));
-
-                if (availableVolunteers.length === 0) {
-                    setErrorMessage('Volunteer not found or unavailable.');
-                }
+                setSuggestions(volunteers.slice(0, 5)); // Show all volunteers
             } else {
                 setSuggestions([]);
                 setErrorMessage('Error fetching suggestions.');
@@ -61,9 +57,11 @@ const VolunteerMatching = () => {
             const response = await fetch(`http://localhost:4000/match/events/${suggestion.full_name}`);
             if (response.ok) {
                 const events = await response.json();
-                setMatchedEvents(events);
+                // Exclude events already matched to any volunteer
+                const availableEvents = events.filter(event => !matchedVolunteers.has(event.event_name));
+                setMatchedEvents(availableEvents);
 
-                if (events.length === 0) {
+                if (availableEvents.length === 0) {
                     setErrorMessage('No events found for this volunteer.');
                 }
             } else {
@@ -90,12 +88,6 @@ const VolunteerMatching = () => {
             return;
         }
 
-        // Check if there are no matched events for the selected volunteer
-        if (matchedEvents.length === 0) {
-            setErrorMessage('No events matched for this volunteer.');
-            return;
-        }
-
         // Find the selected event object
         const selectedEventData = matchedEvents.find(event => event.event_id === parseInt(selectedEvent));
         
@@ -106,6 +98,7 @@ const VolunteerMatching = () => {
 
         const confirmMatch = window.confirm(`Are you sure you want to match ${volunteerName} to ${selectedEventData.event_name}?`);
         if (confirmMatch) {
+            setMatchingLoading(true);
             setMatchedVolunteers(prev => new Set(prev).add(volunteerName));
             setMatchedEvents(prev => prev.filter(event => event.event_id !== selectedEventData.event_id));
             setSuccessMessage(`${volunteerName} was successfully matched to ${selectedEventData.event_name}!`);
@@ -123,6 +116,7 @@ const VolunteerMatching = () => {
             setSelectedEvent('');
             setSuggestions([]);
             setErrorMessage('');
+            setMatchingLoading(false);
         }
     };
 
@@ -130,7 +124,6 @@ const VolunteerMatching = () => {
         setIsSuccessVisible(false);
     };
 
-    // Determine if the Match Volunteer button should be disabled
     const isMatchButtonDisabled = !volunteerName || !selectedEvent || matchedVolunteers.has(volunteerName);
 
     return (
@@ -190,9 +183,9 @@ const VolunteerMatching = () => {
                 <div className="form-group">
                     <button 
                         onClick={handleMatchVolunteer} 
-                        disabled={isMatchButtonDisabled}
+                        disabled={isMatchButtonDisabled || matchingLoading}
                     >
-                        Match Volunteer
+                        {matchingLoading ? 'Matching...' : 'Match Volunteer'}
                     </button>
                 </div>
             </main>

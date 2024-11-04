@@ -48,8 +48,9 @@ router.get('/events/:volunteerName', async (req, res) => {
         const skillsArray = volunteerSkills.split(',').map(skill => skill.trim());
         const events = await db.getAllEvents();
 
+        // Show events that are not matched and match the skills
         const matchedEvents = events.filter(event =>
-            !event.matched &&
+            !event.matched && 
             event.skills.split(',').map(skill => skill.trim()).every(skill => skillsArray.includes(skill))
         );
 
@@ -78,6 +79,8 @@ router.post('/matched-volunteers', async (req, res) => {
         // Match volunteer to event
         const matchResult = await db.matchVolunteerToEvent(volunteer[0].vol_id, eventId);
         if (matchResult) {
+            // Update the event's vol_id and matched status
+            await db.updateEventWithVolunteer(eventId, volunteer[0].vol_id);
             res.status(201).json({ message: 'Match saved successfully.' });
         } else {
             res.status(500).json({ message: "Error saving the match." });
