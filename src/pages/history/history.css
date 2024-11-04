@@ -119,3 +119,11 @@ th {
         padding: 8px;
     }
 }
+
+.status-circle {
+    display: inline-block;
+    width: 10px; /* Circle width */
+    height: 10px; /* Circle height */
+    border-radius: 50%; /* Makes it a circle */
+    margin-right: 5px; /* Spacing between circle and text */
+}

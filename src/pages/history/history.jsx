@@ -12,11 +12,10 @@ const VolunteerHistory = () => {
             setSuggestions([]); // Clear suggestions if input is empty
             return;
         }
-        
+
         try {
             const response = await axios.get('http://localhost:4000/history/volunteers');
             const volunteers = response.data;
-            console.log(volunteers); // Debug log
             const matches = volunteers.filter(name => name.toLowerCase().includes(value.toLowerCase()));
             setSuggestions(matches);
         } catch (error) {
@@ -26,31 +25,47 @@ const VolunteerHistory = () => {
 
     const selectVolunteer = (volunteer) => {
         setSelectedVolunteer(volunteer);
-        document.getElementById('volunteer-name').value = volunteer; 
+        document.getElementById('volunteer-name').value = volunteer;
         setSuggestions([]);
     };
 
     const viewHistory = async () => {
         if (selectedVolunteer) {
-            console.log("Selected Volunteer:", selectedVolunteer); // Debug log
             try {
                 const response = await axios.get(`http://localhost:4000/history/${encodeURIComponent(selectedVolunteer)}`);
                 const historyItems = response.data;
 
-                console.log("History Items:", historyItems); // Debug log for history items
-
                 if (historyItems.length === 0) {
                     setHistoryDisplay(`<h2>History for ${selectedVolunteer}</h2><p>No participation history found.</p>`);
                 } else {
-                    const tableRows = historyItems.map(item => `
-                        <tr>
-                            <td>${item.event_name}</td>
-                            <td>${item.description}</td>
-                            <td>${item.location}</td>
-                            <td>${item.skills}</td>
-                            <td>${new Date(item.date).toLocaleDateString()}</td>
-                        </tr>
-                    `).join('');
+                    const today = new Date();
+                    const tableRows = historyItems.map(item => {
+                        const eventDate = new Date(item.date);
+                        let status = 'completed';
+                        let circleColor = 'green'; // Default color for completed
+
+                        if (eventDate > today) {
+                            status = 'upcoming';
+                            circleColor = 'orange'; // Color for upcoming
+                        } else if (eventDate.toDateString() === today.toDateString()) {
+                            status = 'ongoing';
+                            circleColor = 'blue'; // Color for ongoing
+                        }
+
+                        return `
+                            <tr>
+                                <td>${item.event_name}</td>
+                                <td>${item.description}</td>
+                                <td>${item.location}</td>
+                                <td>${item.skills}</td>
+                                <td>${eventDate.toLocaleDateString()}</td>
+                                <td>
+                                    <span class="status-circle" style="background-color: ${circleColor};"></span> 
+                                    ${status}
+                                </td> <!-- Status column with colored circle -->
+                            </tr>
+                        `;
+                    }).join('');
                     setHistoryDisplay(`
                         <h2>History for ${selectedVolunteer}</h2>
                         <table>
@@ -61,6 +76,7 @@ const VolunteerHistory = () => {
                                     <th>Location</th>
                                     <th>Skills</th>
                                     <th>Date</th>
+                                    <th>Status</th> <!-- New header for status -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,7 +86,6 @@ const VolunteerHistory = () => {
                     `);
                 }
             } catch (error) {
-                console.error("Error fetching history:", error); // Debug log
                 if (error.response && error.response.status === 404) {
                     setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
                 } else {

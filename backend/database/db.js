@@ -361,7 +361,7 @@ const getVolunteerHistoryByUserId = (userId) => {
 // Function to add a new entry to the volunteer history
 const addVolunteerEntry = (volId, eventId) => {
     return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO volunteer_history (vol_id, event_id, participation_date) VALUES (?, ?, NOW())";
+        const sql = "INSERT INTO volunteer_history (vol_id, event_id, events_attended, events_ongoing) VALUES (?, ?, 1, 0)";
         con.query(sql, [volId, eventId], (err, result) => {
             if (err) return reject(err);
             resolve(result.insertId);

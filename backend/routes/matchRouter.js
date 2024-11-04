@@ -10,7 +10,6 @@ router.get('/suggestions/:name', async (req, res) => {
         const filteredVolunteers = availableVolunteers.filter(v => 
             v.full_name.toLowerCase().includes(name)
         );
-
         res.json(filteredVolunteers);
     } catch (err) {
         console.error("Error fetching volunteers:", err);
@@ -38,9 +37,7 @@ router.get('/events/:volunteerName', async (req, res) => {
             return res.status(404).json({ message: "Volunteer not found." });
         }
 
-        const volunteerSkills = volunteer[0].skills; // Now this will contain the skills
-        console.log("Volunteer Skills:", volunteerSkills); // Debug log
-
+        const volunteerSkills = volunteer[0].skills; // Get volunteer skills
         if (!volunteerSkills) {
             return res.status(400).json({ message: "No skills defined for this volunteer." });
         }
@@ -48,7 +45,7 @@ router.get('/events/:volunteerName', async (req, res) => {
         const skillsArray = volunteerSkills.split(',').map(skill => skill.trim());
         const events = await db.getAllEvents();
 
-        // Show events that are not matched and match the skills
+        // Filter for un-matched events that match the volunteer's skills
         const matchedEvents = events.filter(event =>
             !event.matched && 
             event.skills.split(',').map(skill => skill.trim()).every(skill => skillsArray.includes(skill))
@@ -66,12 +63,12 @@ router.post('/matched-volunteers', async (req, res) => {
     const { volunteerName, eventId } = req.body;
 
     try {
-        const event = await db.getEventbyID(eventId); // Get the event to check if it's already matched
+        const event = await db.getEventbyID(eventId);
         if (event && event.matched) {
             return res.status(400).json({ message: "Event is already matched to another volunteer." });
         }
 
-        const volunteer = await db.getV_IDbyName(volunteerName); // Get volunteer ID
+        const volunteer = await db.getV_IDbyName(volunteerName);
         if (!volunteer || volunteer.length === 0) {
             return res.status(404).json({ message: "Volunteer not found." });
         }
@@ -79,8 +76,15 @@ router.post('/matched-volunteers', async (req, res) => {
         // Match volunteer to event
         const matchResult = await db.matchVolunteerToEvent(volunteer[0].vol_id, eventId);
         if (matchResult) {
-            // Update the event's vol_id and matched status
-            await db.updateEventWithVolunteer(eventId, volunteer[0].vol_id);
+            // Check if the event date is in the past
+            const eventDate = new Date(event.date);
+            const today = new Date();
+
+            if (eventDate < today) {
+                // Insert into volunteer_history if the event is in the past
+                await db.addVolunteerEntry(volunteer[0].vol_id, eventId);
+            }
+
             res.status(201).json({ message: 'Match saved successfully.' });
         } else {
             res.status(500).json({ message: "Error saving the match." });
