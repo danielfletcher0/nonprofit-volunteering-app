@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "./style.css";
 import axios from "axios";
 
@@ -7,8 +9,10 @@ function LoginPage() {
         username: "",
         password: "",
     });
+    const { setIsLoggedIn, setUsername } = useAuth("");
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,12 +26,14 @@ function LoginPage() {
                 "http://localhost:4000/login",
                 credentials
             );
-            setMessage(response.data.message);
+            const { redirectTo, message } = response.data;
+            setMessage(message);
             setIsSuccess(true);
+            setUsername(credentials.username);
+            setIsLoggedIn(true);
+            navigate(redirectTo || "/");
         } catch (error) {
-            setMessage(
-                error.response ? error.response.data.message : "Login failed"
-            );
+            setMessage("Invalid username or password");
             setIsSuccess(false);
         }
     };

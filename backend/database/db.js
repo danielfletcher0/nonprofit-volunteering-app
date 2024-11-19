@@ -21,8 +21,11 @@ const createUser = (userData) => {
             sql,
             [userData.username, userData.password],
             (err, result) => {
-                if (err) return reject(err);
-                resolve(result.insertId);
+                if (!resolve || !result.insertId) {
+                    if (err) return reject(err);
+                } else {
+                    resolve(result.insertId);
+                }
             }
         );
     });
@@ -39,6 +42,7 @@ const getUserByUsername = (username) => {
 };
 
 const getUserByUsernameAndPassword = (username, password) => {
+    console.log("Function called");
     return new Promise((resolve, reject) => {
         const sql = `SELECT * FROM login WHERE login_user = ? AND login_pass = ?`;
         con.query(sql, [username, password], (err, result) => {
@@ -349,8 +353,7 @@ const getVolunteerHistoryByUserId = (userId) => {
             SELECT e.event_name, e.description, e.location, e.skills, e.date, vh.events_attended
             FROM volunteer_history vh
             JOIN Event e ON vh.event_id = e.event_id
-            WHERE vh.vol_id = ?`  // Use vol_id to match your schema
-        ;
+            WHERE vh.vol_id = ?`; // Use vol_id to match your schema
         con.query(sql, [userId], (err, results) => {
             if (err) return reject(err);
             resolve(results);
@@ -361,7 +364,8 @@ const getVolunteerHistoryByUserId = (userId) => {
 // Function to add a new entry to the volunteer history
 const addVolunteerEntry = (volId, eventId) => {
     return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO volunteer_history (vol_id, event_id, events_attended, events_ongoing) VALUES (?, ?, 1, 0)";
+        const sql =
+            "INSERT INTO volunteer_history (vol_id, event_id, events_attended, events_ongoing) VALUES (?, ?, 1, 0)";
         con.query(sql, [volId, eventId], (err, result) => {
             if (err) return reject(err);
             resolve(result.insertId);
@@ -418,5 +422,5 @@ module.exports = {
     getAllVolHist,
     ////////////////
     matchVolunteerToEvent,
-    updateEventWithVolunteer
+    updateEventWithVolunteer,
 };

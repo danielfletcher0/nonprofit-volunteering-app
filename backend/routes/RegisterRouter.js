@@ -30,19 +30,28 @@ const validateRegistration = (user) => {
 // POST route to handle registration
 router.post("/", async (req, res) => {
     const { username, password } = req.body;
-    const newUser = { username, password };
 
     try {
         const userExists = await db.getUserByUsername(username);
         if (userExists) {
-            return res.status(409).json({ message: "Username already exists" });
+            return res
+                .status(409)
+                .json({ message: ["Username already exists."] });
         }
 
+        const errors = validateRegistration({ username, password });
+        console.log(`errors are ${errors}`);
+        if (errors.length > 0) {
+            return res.status(400).json({ message: errors });
+        }
+
+        const newUser = { username, password };
         const userId = await db.createUser(newUser);
         res.status(201).json({
             message: "User registered successfully",
             userId,
         });
+        console.log("SLSKLSK");
     } catch (error) {
         console.error("Detailed error during registration:", error);
         res.status(500).json({

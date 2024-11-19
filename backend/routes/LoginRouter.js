@@ -14,13 +14,15 @@ router.post("/", async (req, res) => {
         console.log("Login attempt with:", { username });
         const user = await db.getUserByUsernameAndPassword(username, password);
         if (!user) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res
+                .status(401)
+                .json({ message: "Invalid username or password" });
         }
 
         res.status(200).json({
             message: "Login successful",
+            redirectTo: "/",
         });
-        res.redirect("/home");
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).json({

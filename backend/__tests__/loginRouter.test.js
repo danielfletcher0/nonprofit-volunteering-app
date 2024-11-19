@@ -2,7 +2,7 @@ const request = require("supertest");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const loginRouter = require("../routes/loginRouter"); // Adjust the path as needed
+const loginRouter = require("../routes/LoginRouter"); // Adjust the path as needed
 
 const app = express();
 app.use(cors());

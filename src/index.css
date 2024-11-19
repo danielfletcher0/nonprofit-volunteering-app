@@ -47,7 +47,7 @@
 
 /* Button styles scoped under home layout */
 .home-layout button {
-    background-color: #007BFF; /* Default button color */
+    background-color: #007bff; /* Default button color */
     color: white; /* Text color */
     border: none; /* Remove border */
     padding: 10px 15px; /* Padding for the button */
@@ -58,4 +58,9 @@
 /* Button hover state */
 .home-layout button:hover {
     background-color: #0056b3; /* Darker blue on hover */
+}
+
+.username {
+    font-size: 20px;
+    color: rgb(252, 0, 189);
 }

@@ -20,7 +20,6 @@ nav ul {
     margin: 0; /* Remove default margin */
     padding: 0; /* Remove default padding */
     margin-left: 60px; /* Add margin to the left for spacing (adjust as needed) */
-
 }
 
 nav li {
@@ -37,7 +36,7 @@ nav a {
 
 nav a:hover,
 nav a.active {
-    background-color: #C19A6B; /* Tan color for hover and active */
+    background-color: #c19a6b; /* Tan color for hover and active */
     color: #fff; /* White text color on hover */
     border-radius: 5px; /* Rounded corners on hover */
 }
@@ -70,7 +69,27 @@ nav a.active {
 }
 
 nav a.active {
-    background-color: #C19A6B; /* Tan color for active */
+    background-color: #c19a6b; /* Tan color for active */
     color: #fff; /* White text color on active */
     border-radius: 5px; /* Rounded corners for active */
+}
+
+div.username-display {
+    display: block;
+    font-weight: bold;
+    float: right;
+}
+
+.logout-option {
+    align-items: start;
+    font-weight: normal;
+    padding: 0 0;
+    font-size: small;
+    transform: translateY(30px);
+}
+a.logout-option:hover {
+    background-color: unset;
+    text-decoration: underline;
+    text-decoration-color: blue;
+    color: black;
 }

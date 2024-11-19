@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "./style.css";
 import axios from "axios";
 
@@ -6,10 +8,11 @@ function RegisterPage() {
     const [formData, setFormData] = useState({
         username: "",
         password: "",
-        email: "",
     });
+    const { setIsLoggedIn, setUsername } = useAuth("");
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,15 +26,20 @@ function RegisterPage() {
                 "http://localhost:4000/register",
                 formData
             );
-            setMessage(response.data.message);
+            const { redirectTo, message } = response.data;
+            setMessage(message);
             setIsSuccess(true);
+            setUsername(formData.username);
+            setIsLoggedIn(true);
+            navigate(redirectTo || "/");
         } catch (error) {
             setMessage(
                 error.response
-                    ? error.response.data.message
+                    ? error.response.data.message[0]
                     : "Registration failed"
             );
             setIsSuccess(false);
+            setIsLoggedIn(false);
         }
     };
 

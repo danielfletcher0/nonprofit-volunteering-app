@@ -14,7 +14,6 @@ describe("Register Router", () => {
         const newUser = {
             username: "newUser",
             password: "validPassword",
-            email: "newuser@example.com",
         };
 
         const response = await request(app).post("/register").send(newUser);
@@ -26,7 +25,6 @@ describe("Register Router", () => {
     it("should return a password error when password is missing", async () => {
         const incompleteUser = {
             username: "newUser",
-            email: "newuser@example.com",
             // Missing password
         };
 
@@ -40,41 +38,10 @@ describe("Register Router", () => {
         );
     });
 
-    it("should return an email error when email is missing", async () => {
-        const incompleteUser = {
-            username: "newUser",
-            password: "validPassword",
-            // Missing email
-        };
-
-        const response = await request(app)
-            .post("/register")
-            .send(incompleteUser);
-
-        expect(response.status).toBe(400);
-        expect(response.body.message).toBe("Missing required fields");
-    });
-
-    it("should return 400 for an invalid email format", async () => {
-        const invalidEmailUser = {
-            username: "newUser",
-            password: "validPassword",
-            email: "invalidEmail",
-        };
-
-        const response = await request(app)
-            .post("/register")
-            .send(invalidEmailUser);
-
-        expect(response.status).toBe(400);
-        expect(response.body.message).toBe("Invalid email format");
-    });
-
     it("should return 409 for a duplicate username", async () => {
         const duplicateUser = {
             username: "existingUser",
             password: "validPassword",
-            email: "duplicate@example.com",
         };
 
         // First registration
