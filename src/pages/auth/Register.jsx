@@ -74,7 +74,13 @@ function RegisterPage() {
                 </a>
             </p>
             {message && (
-                <p className={isSuccess ? "success-message" : "error-message"}>
+                <p
+                    className={
+                        isSuccess
+                            ? "auth-success-message"
+                            : "auth-error-message"
+                    }
+                >
                     {message}
                 </p>
             )}

@@ -23,10 +23,12 @@ function LoginPage() {
                 credentials
             );
             setMessage(response.data.message);
+            setIsSuccess(true);
         } catch (error) {
             setMessage(
                 error.response ? error.response.data.message : "Login failed"
             );
+            setIsSuccess(false);
         }
     };
 
@@ -69,7 +71,13 @@ function LoginPage() {
                 </a>
             </p>
             {message && (
-                <p className={isSuccess ? "success-message" : "error-message"}>
+                <p
+                    className={
+                        isSuccess
+                            ? "auth-success-message"
+                            : "auth-error-message"
+                    }
+                >
                     {message}
                 </p>
             )}
