@@ -24,7 +24,7 @@ const validateEvent = (event) => {
     }
 
     // Skills  
-    if (!Array.isArray(event.skill) || event.skill.length === 0) {
+    if (event.skill.length === 0) {
         errors.push('At least one skill is required.');
     }
 
