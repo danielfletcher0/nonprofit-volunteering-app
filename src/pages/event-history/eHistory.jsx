@@ -22,6 +22,7 @@ const EventHistory = () => {
                     <td>${item.skills}</td>
                     <td>${item.volunteer}</td>
                     <td>${item.date}</td>
+                    <td>${item.urgency}</td>
                 </tr>
             `).join('');
 
@@ -36,6 +37,7 @@ const EventHistory = () => {
                             <th>Skills</th>
                             <th>Volunteer</th>
                             <th>Date</th>
+                            <th>Urgency</th>
                         </tr>
                     </thead>
                     <tbody>${tableRows}</tbody>

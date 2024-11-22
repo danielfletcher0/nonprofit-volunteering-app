@@ -7,18 +7,30 @@ let eventHistory = [
         name: "Beach Cleanup", 
         description: "Cleaning up the beach to promote a cleaner environment.", 
         location: "California Beach", 
-        skills: "Teamwork, Physical fitness", 
+        skills: "Leadership", 
         volunteer: "John Doe", 
-        date: "2023-06-15" 
+        date: "2025-06-15",
+        urgency: "L" 
     },
     { 
         name: "Food Drive", 
         description: "Collecting food donations for local shelters.", 
         location: "Community Center", 
-        skills: "Organizational skills, Communication", 
+        skills: "Communication", 
         volunteer: "Alice Johnson", 
-        date: "2023-07-20" 
+        date: "2025-07-20",
+        urgency: "M"
+    },
+    { 
+        name: "Food Transport", 
+        description: "Transporting and distributing food donations from the food bank.", 
+        location: "Houston", 
+        skills: "Logistics", 
+        volunteer: "John Smith", 
+        date: "2025-11-30",
+        urgency: "H"
     }
+
 ];
 
 // Route to get event history
@@ -28,7 +40,7 @@ router.get('/history', (req, res) => {
 
 // Route to add an event
 router.post('/add', (req, res) => {
-    const { name, description, location, skills, volunteer, date } = req.body;
+    const { name, description, location, skills, volunteer, date, urgency} = req.body;
 
     // Validations
     if (!name || !description || !location || !skills || !volunteer || !date) {
@@ -42,7 +54,7 @@ router.post('/add', (req, res) => {
     }
 
     // Add the event to the mock data
-    eventHistory.push({ name, description, location, skills, volunteer, date });
+    eventHistory.push({ name, description, location, skills, volunteer, date, urgency});
     res.status(201).json({ message: 'Event added successfully' });
 });
 
