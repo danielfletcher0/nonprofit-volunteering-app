@@ -73,9 +73,9 @@ const EventCreation = () => {
                 <div className="event-form-group">
                     <label htmlFor="skills">Required Skills</label>
                     <select onChange={handleInputChange} id="skills" name="skill">
-                        <option value="leader">Leadership</option>
-                        <option value="logistic">Logistics</option>
-                        <option value="communication">Communications</option>
+                        <option value="Leadership">Leadership</option>
+                        <option value="Logistics">Logistics</option>
+                        <option value="Communications">Communications</option>
                     </select>
                 </div>
                 <div className="event-form-group">
