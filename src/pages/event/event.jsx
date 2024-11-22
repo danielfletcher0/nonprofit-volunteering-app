@@ -7,7 +7,7 @@ const EventCreation = () => {
         name: '',
         description: '',
         location: '',
-        skill: '',
+        skills: '',
         urgency: '',
         date: '',
     });
@@ -53,7 +53,7 @@ const EventCreation = () => {
             </div>
             <form id="event-matching-form" onSubmit={handleSubmit}>
                 <div className="event-form-group">
-                    <label htmlFor="event-name">Event Type:</label>
+                    <label htmlFor="event-name">Event Name:</label>
                     <input type="text" onChange={handleInputChange} id="event-name" name="name" maxLength="100" />
                 </div>
                 <div className="event-form-group">

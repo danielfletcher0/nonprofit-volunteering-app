@@ -43,10 +43,10 @@ const validateEvent = (event) => {
 
 // Create a new event 
 router.post('/create', async(req, res) => {
-    const { name, description, location, skill, urgency, date } = req.body;
+    const {event_name, description, location, skills, urgency, date } = req.body;
 
     // Validate event data
-    const newEvent = { name, description, location, skill, urgency, date };
+    const newEvent = { event_name, description, location, skills, urgency, date };
     const validationErrors = validateEvent(newEvent);
 
     if (validationErrors.length > 0) {

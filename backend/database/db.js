@@ -210,7 +210,7 @@ const createEvent = async (eventData) => {
                 date,
                 urgency,
             } = eventData;
-            const sql = `INSERT INTO event(admin_id, event_name, description, location, skills, date, urgency) 
+            const sql = `INSERT INTO event(admin_id, event_name, description, location, skills, urgency, date) 
                          VALUES (1, ?, ?, ?, ?, ?, ?)`;
 
             con.query(
@@ -221,8 +221,8 @@ const createEvent = async (eventData) => {
                     description,
                     location,
                     skills,
-                    JSON.stringify(date),
                     urgency,
+                    JSON.stringify(date)
                 ],
                 (err, result) => {
                     if (err) {
