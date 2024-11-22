@@ -4,52 +4,54 @@ const db = require('../database/db');
 
 let events = [];
 
-// Validation
 const validateEvent = (event) => {
     let errors = [];
 
-    // Event Name 
+    console.log('Validating Event:', event);
+
     if (!event.name || event.name.length > 100) {
         errors.push('Event Name is required and must be less than 100 characters.');
     }
 
-    // Description  
     if (!event.description) {
         errors.push('Description is required.');
     }
 
-    // Location 
     if (!event.location) {
         errors.push('Location is required.');
     }
 
-    // Skills  
-    if (!Array.isArray(event.skill) || event.skill.length === 0) {
+    if ((!Array.isArray(event.skill) && typeof event.skill !== 'string') || event.skill.length === 0) {
         errors.push('At least one skill is required.');
     }
 
-    // Urgency 
     if (!event.urgency) {
         errors.push('Urgency level is required.');
     }
 
-    // Date  
-    if (!event.availability) {
-        errors.push('Date of event is required.');
+    if (!event.availability || isNaN(Date.parse(event.availability))) {
+        errors.push('Valid date of event is required.');
     }
+
+    console.log('Validation Completed. Errors:', errors);
 
     return errors;
 };
 
-// Create a new event 
-router.post('/create', async(req, res) => {
+
+
+router.post('/create', async (req, res) => {
     const { name, description, location, skill, urgency, availability } = req.body;
+
+    // Log the raw request body for debugging
+    console.log('Received Event Data:', req.body);
 
     // Validate event data
     const newEvent = { name, description, location, skill, urgency, availability };
     const validationErrors = validateEvent(newEvent);
 
     if (validationErrors.length > 0) {
+        console.error('Validation Errors:', validationErrors);
         return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
     }
 
@@ -57,10 +59,10 @@ router.post('/create', async(req, res) => {
         const eventID = await db.createEvent(newEvent);
         console.log('Event created with ID:', eventID);
         res.status(201).json({ message: 'Event created successfully', eventID });
-      } catch (error) {
+    } catch (error) {
         console.error('Error adding event to database:', error);
         res.status(500).json({ message: 'Error adding event to database', error: error.message });
-      }
+    }
 });
 
 // Get all events

@@ -196,46 +196,49 @@ const deleteProfile = (id) => {
 };
 
 // EVENTS
-
-// Create an Event
 const createEvent = async (eventData) => {
     try {
+        console.log('Preparing to Create Event:', eventData); // Log input data
         return new Promise((resolve, reject) => {
             const {
-                admin_id,
-                event_name,
+                admin_id = 1, // Default admin_id
+                name,
                 description,
                 location,
-                skills,
-                date,
+                skill,
                 urgency,
+                availability,
             } = eventData;
-            const sql = `INSERT INTO event(admin_id, event_name, description, location, skills, date, urgency) 
-                         VALUES (1, ?, ?, ?, ?, ?, ?)`;
 
-            con.query(
-                sql,
-                [
-                    admin_id,
-                    event_name,
-                    description,
-                    location,
-                    skills,
-                    JSON.stringify(date),
-                    urgency,
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result.insertId);
+            const sql = `INSERT INTO event (admin_id, event_name, description, location, skills, date, urgency) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+            const params = [
+                admin_id,
+                name,
+                description,
+                location,
+                skill, // Assuming 'skill' is a string here
+                availability, // Assuming date is properly formatted
+                urgency,
+            ];
+
+            console.log('Executing SQL Query:', sql, 'with params:', params); // Log SQL query
+
+            con.query(sql, params, (err, result) => {
+                if (err) {
+                    console.error('Database Error:', err);
+                    return reject(err);
                 }
-            );
+                console.log('Event Created:', result.insertId);
+                resolve(result.insertId);
+            });
         });
     } catch (err) {
         throw err;
     }
 };
+
 
 // Get list of All Events
 const getAllEvents = () => {
@@ -243,7 +246,7 @@ const getAllEvents = () => {
         const sql = "SELECT * FROM event";
         con.query(sql, (err, results) => {
             if (err) {
-                console.error("Error fetching events:", err); // Log the error
+                console.error("Error fetching events:", err.message); // Log the error
                 return reject(err);
             }
             console.log("Fetched Events:", results); // Log the fetched results
@@ -252,43 +255,56 @@ const getAllEvents = () => {
     });
 };
 
+// Delete an Event
 const deleteEvent = (id) => {
     return new Promise((resolve, reject) => {
         const sql = "DELETE FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
-                console.log("No Event by this ID");
+                console.error('Error deleting event:', err.message); // Log error
                 return reject(err);
+            }
+            if (result.affectedRows === 0) {
+                console.log('No event found with this ID.');
             }
             resolve(result);
         });
     });
 };
 
-// Gets all Events by a specific Volunteer ID
+// Get all Events by a specific Volunteer ID
 const getEventByVol = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM event WHERE vol_id = ?";
-        con.query(sql, [id], (err, result) => {
+        const sql = `SELECT e.*
+                     FROM event e
+                     JOIN volunteer_history vh ON vh.event_id = e.event_id
+                     WHERE vh.vol_id = ?`;
+        con.query(sql, [id], (err, results) => {
             if (err) {
-                console.log("No event for this Volunteer");
+                console.error("Error fetching events for volunteer:", err.message); // Log error
                 return reject(err);
             }
-            resolve(result);
+            console.log("Events for Volunteer ID:", id, results); // Log results
+            resolve(results);
         });
     });
 };
 
-// Get Event ID by name
+// Get Event ID by Name
 const getEventID = (name) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT event_id FROM event WHERE event_name = ?";
         con.query(sql, [name], (err, result) => {
             if (err) {
-                console.log("No event ID from this name");
+                console.error('Error fetching Event ID:', err.message); // Log error
                 return reject(err);
             }
-            resolve(result[0]);
+            if (!result.length) {
+                console.log('No event found with the given name.');
+                return resolve(null);
+            }
+            console.log('Fetched Event ID:', result[0].event_id); // Log result
+            resolve(result[0].event_id);
         });
     });
 };
@@ -299,13 +315,19 @@ const getEventbyID = (id) => {
         const sql = "SELECT * FROM event WHERE event_id = ?";
         con.query(sql, [id], (err, result) => {
             if (err) {
-                console.log("No event ID from this name");
+                console.error('Error fetching Event by ID:', err.message); // Log error
                 return reject(err);
             }
+            if (!result.length) {
+                console.log('No event found with the given ID.');
+                return resolve(null);
+            }
+            console.log('Fetched Event:', result[0]); // Log result
             resolve(result[0]);
         });
     });
 };
+
 
 //////////////////////////////////////
 // Get specific Volunteer ID

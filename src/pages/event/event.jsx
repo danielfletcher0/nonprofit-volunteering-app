@@ -19,10 +19,11 @@ const EventCreation = () => {
             [name]: value,
         });
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
+        console.log('Form Data Submitted:', formData);
+    
         fetch('http://localhost:4000/events/create', {
             method: 'POST',
             headers: {
@@ -30,22 +31,25 @@ const EventCreation = () => {
             },
             body: JSON.stringify(formData),
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.message || 'Failed to create event.');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Event created!');
-        })
-        .catch(error => {
-            alert(error.message);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        console.error('Backend Response Error:', err);
+                        throw new Error(err.message || 'Failed to create event.');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Event created!');
+            })
+            .catch(error => {
+                console.error('Submission Error:', error.message);
+                alert(error.message);
+            });
     };
-
+    
+    
     return (
         <div className="event-container">
             <div className="event-header-container">
