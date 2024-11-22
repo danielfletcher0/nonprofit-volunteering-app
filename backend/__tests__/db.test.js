@@ -70,36 +70,4 @@ describe("Database functions", () => {
         expect(profile).toEqual(mockProfile);
         expect(con.query).toHaveBeenCalledWith(expect.any(String), [1], expect.any(Function));
     });
-
-    test("updateProfile should update profile by ID", async () => {
-        con.query.mockImplementation((query, values, callback) => {
-            callback(null, { affectedRows: 1 }); 
-        });
-
-        const profileData = {
-            fullName: 'Updated User',
-            address1: '456 New St',
-            address2: '',
-            city: 'New City',
-            state: 'NC',
-            zip: '67890',
-            skills: ['design'],
-            preferences: 'night shifts',
-            availability: ['2024-12-01'],
-        };
-
-        const result = await db.updateProfile(1, profileData);
-        expect(result.affectedRows).toBe(1);
-        expect(con.query).toHaveBeenCalledTimes(1);
-    });
-
-    test("deleteProfile should delete profile by ID", async () => {
-        con.query.mockImplementation((query, values, callback) => {
-            callback(null, { affectedRows: 1 }); 
-        });
-
-        const result = await db.deleteProfile(1);
-        expect(result.affectedRows).toBe(1);
-        expect(con.query).toHaveBeenCalledWith(expect.any(String), [1], expect.any(Function));
-    });
 });

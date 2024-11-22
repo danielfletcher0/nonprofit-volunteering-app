@@ -105,40 +105,4 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update a profile
-router.put('/:id', async (req, res) => {
-    const { fullName, address1, address2, city, state, zip, skills, preferences, availability } = req.body;
-
-    // Build profile object for update
-    const updatedProfile = { fullName, address1, address2, city, state, zip, skills, preferences, availability };
-    const validationErrors = validateProfile(updatedProfile);
-
-    if (validationErrors.length > 0) {
-        return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
-    }
-
-    try {
-        const result = await db.updateProfile(req.params.id, updatedProfile);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
-        res.json({ message: 'Profile updated successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error updating profile in database', error: error.message });
-    }
-});
-
-// Delete a profile
-router.delete('/:id', async (req, res) => {
-    try {
-        const result = await db.deleteProfile(req.params.id);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
-        res.json({ message: 'Profile deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error deleting profile from database', error: error.message });
-    }
-});
-
 module.exports = router;

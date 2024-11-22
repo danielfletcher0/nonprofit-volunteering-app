@@ -59,13 +59,11 @@ const initialStates = [
 
 
 const initialSkillsOptions = [
-  { value: 'PlaceHolder1', label: 'PlaceHolder1' },
-  { value: 'PlaceHolder2', label: 'PlaceHolder2' },
-  { value: 'PlaceHolder3', label: 'PlaceHolder3' },
+  { value: 'Leadership', label: 'Leadership' },
+  { value: 'Logistics', label: 'Logistics' },
+  { value: 'Communication', label: 'Communication' },
   // Add more skills as needed...
 ];
-
-// ADASDAW BTVRAWBTXAWIDEBUYAWRYOTWORAEWIAYBWBTAWETIYOBRAEWIRYAEWRIYAEBTWITRAEWIYBTRYAEWIAEWIORBAEWIORTAEWIOAEWTOIRAEWI
 
 function Profile() {
   const [formData, setFormData] = useState({ username: '', fullName: '', address1: '', address2: '', city: '', state: '', zip: '', skills: [], preferences: '', availability: [''], 
@@ -101,7 +99,7 @@ function Profile() {
 
   const handleSkillsChange = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-    const newlySelectedSkill = selectedOptions[selectedOptions.length - 1]; // Latest selected skill
+    const newlySelectedSkill = selectedOptions[selectedOptions.length - 1]; 
     const updatedSkills = [...formData.skills, newlySelectedSkill];
 
     // Update formData with the new selected skills
@@ -152,7 +150,6 @@ function Profile() {
       availability: newDates,
     });
   };
- /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
  const handleSubmit = (e) => {
   e.preventDefault();  // Prevent the default form submission behavior
   
