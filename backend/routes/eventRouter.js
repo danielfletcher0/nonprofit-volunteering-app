@@ -34,7 +34,7 @@ const validateEvent = (event) => {
     }
 
     // Date  
-    if (!event.availability) {
+    if (!event.date) {
         errors.push('Date of event is required.');
     }
 
@@ -43,10 +43,10 @@ const validateEvent = (event) => {
 
 // Create a new event 
 router.post('/create', async(req, res) => {
-    const { name, description, location, skill, urgency, availability } = req.body;
+    const { name, description, location, skill, urgency, date } = req.body;
 
     // Validate event data
-    const newEvent = { name, description, location, skill, urgency, availability };
+    const newEvent = { name, description, location, skill, urgency, date };
     const validationErrors = validateEvent(newEvent);
 
     if (validationErrors.length > 0) {

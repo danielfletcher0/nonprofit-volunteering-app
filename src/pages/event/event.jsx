@@ -9,7 +9,7 @@ const EventCreation = () => {
         location: '',
         skill: '',
         urgency: '',
-        availability: '',
+        date: '',
     });
 
     const handleInputChange = (e) => {
@@ -88,7 +88,7 @@ const EventCreation = () => {
                 </div>
                 <div className="event-form-group">
                     <label htmlFor="date">Date of Event:</label>
-                    <input type="date" onChange={handleInputChange} id="event-date" name="availability" />
+                    <input type="date" onChange={handleInputChange} id="event-date" name="date" />
                 </div>
                 <div className="event-form-group">
                     <button type="submit">Submit Event Form</button>
