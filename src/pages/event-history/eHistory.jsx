@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Papa from "papaparse"; // Import papaparse for CSV
+import jsPDF from "jspdf"; // Import jsPDF for PDF
+import 'jspdf-autotable'; // Import autoTable for jsPDF to work with tables
 import "./eHistory.css";
 
 const EventHistory = () => {
     const [historyDisplay, setHistoryDisplay] = useState("");
+    const [events, setEvents] = useState([]); // To store the fetched event data
+    const [showFormatDropdown, setShowFormatDropdown] = useState(false); // Toggle format selection
+    const [fileFormat, setFileFormat] = useState("pdf"); // Default to PDF
 
     // Fetch event history data from the backend
     const fetchEventHistory = async () => {
@@ -13,6 +18,8 @@ const EventHistory = () => {
                 throw new Error("Failed to fetch event history");
             }
             const volunteerData = await response.json();
+            setEvents(volunteerData); // Store event data for later use
+
             // Convert data into HTML table rows
             let tableRows = volunteerData.map(item => `
                 <tr>
@@ -42,11 +49,53 @@ const EventHistory = () => {
                 </table>
             `;
             
-            setHistoryDisplay(tableHTML);
+            setHistoryDisplay(tableHTML); // Update state to display table
         } catch (error) {
             console.error("Error fetching event history:", error);
             alert("Could not load event history.");
         }
+    };
+
+    // Generate CSV
+    const generateCSV = () => {
+        const csvData = events.map(item => ({
+            EventName: item.name,
+            Description: item.description,
+            Location: item.location,
+            Skills: item.skills,
+            Volunteer: item.volunteer,
+            Date: item.date,
+        }));
+
+        const csv = Papa.unparse(csvData);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "event_history.csv"; // The downloaded file will be named "event_history.csv"
+        link.click();
+    };
+
+    // Generate PDF
+    const generatePDF = () => {
+        const doc = new jsPDF();
+        doc.text("Event History", 10, 10);
+
+        // Prepare table data for PDF
+        const tableData = events.map(item => [
+            item.name, 
+            item.description, 
+            item.location, 
+            item.skills, 
+            item.volunteer, 
+            item.date
+        ]);
+
+        doc.autoTable({
+            head: [["Event Name", "Description", "Location", "Skills", "Volunteer", "Date"]],
+            body: tableData
+        });
+
+        doc.save("event_history.pdf"); // The downloaded file will be named "event_history.pdf"
     };
 
     return (
@@ -62,11 +111,43 @@ const EventHistory = () => {
                     </button>
                 </div>
             </div>
+
             <div
                 id="history-display"
                 style={{ marginTop: '2rem' }}
                 dangerouslySetInnerHTML={{ __html: historyDisplay }}
             />
+
+            {/* Once events are loaded, show options to generate the report */}
+            {events.length > 0 && (
+                <div>
+                    <button onClick={() => setShowFormatDropdown(!showFormatDropdown)}>
+                        Generate Report
+                    </button>
+
+                    {showFormatDropdown && (
+                        <div>
+                            <label htmlFor="file-format">Select File Format:</label>
+                            <select
+                                id="file-format"
+                                value={fileFormat}
+                                onChange={(e) => setFileFormat(e.target.value)}
+                            >
+                                <option value="pdf">PDF</option>
+                                <option value="csv">CSV</option>
+                            </select>
+
+                            <button
+                                onClick={() => {
+                                    fileFormat === "pdf" ? generatePDF() : generateCSV();
+                                }}
+                            >
+                                Download Report
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
