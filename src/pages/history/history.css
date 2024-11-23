@@ -105,6 +105,17 @@ th {
 
 #history-display {
     margin-top: 2rem;
+    margin-bottom: 30px; /* Adds margin below the history table */
+}
+
+/* Spacing for the "Generate File" button and dropdown */
+#generate-file {
+    margin-top: 20px; /* Adds space above the "Generate File" button */
+}
+
+/* File format dropdown */
+#file-format {
+    margin-top: 10px; /* Space above the dropdown */
 }
 
 /* Media Queries for Responsiveness */

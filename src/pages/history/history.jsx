@@ -1,15 +1,22 @@
 import { useState } from "react";
 import axios from "axios";
+import Papa from "papaparse"; // Import papaparse for CSV
+import jsPDF from "jspdf"; // Import jsPDF for PDF
+import 'jspdf-autotable'; // Import autoTable for jsPDF to work with tables
 import "./history.css";
 
 const VolunteerHistory = () => {
     const [selectedVolunteer, setSelectedVolunteer] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [historyDisplay, setHistoryDisplay] = useState("");
+    const [historyData, setHistoryData] = useState([]);
+    const [fileFormat, setFileFormat] = useState("pdf"); // Default format is PDF
+    const [showFormatDropdown, setShowFormatDropdown] = useState(false); // To toggle the format dropdown
+    const [historyViewed, setHistoryViewed] = useState(false); // Track if history has been viewed
 
     const showSuggestions = async (value) => {
         if (!value) {
-            setSuggestions([]); // Clear suggestions if input is empty
+            setSuggestions([]);
             return;
         }
 
@@ -27,6 +34,9 @@ const VolunteerHistory = () => {
         setSelectedVolunteer(volunteer);
         document.getElementById('volunteer-name').value = volunteer;
         setSuggestions([]);
+        setHistoryDisplay(""); // Clear previous history
+        setHistoryData([]); // Clear previous history data
+        setHistoryViewed(false); // Reset history viewed status
     };
 
     const viewHistory = async () => {
@@ -42,30 +52,41 @@ const VolunteerHistory = () => {
                     const tableRows = historyItems.map(item => {
                         const eventDate = new Date(item.date);
                         let status = 'completed';
-                        let circleColor = 'green'; // Default color for completed
+                        let circleColor = 'green';
 
                         if (eventDate > today) {
                             status = 'upcoming';
-                            circleColor = 'orange'; // Color for upcoming
+                            circleColor = 'orange';
                         } else if (eventDate.toDateString() === today.toDateString()) {
                             status = 'ongoing';
-                            circleColor = 'blue'; // Color for ongoing
+                            circleColor = 'blue';
                         }
 
+                        return {
+                            event_name: item.event_name,
+                            description: item.description,
+                            location: item.location,
+                            skills: item.skills,
+                            date: eventDate.toLocaleDateString(),
+                            status,
+                            circleColor
+                        };
+                    });
+
+                    // Display the table
+                    const tableRowsHTML = tableRows.map(item => {
                         return `
                             <tr>
                                 <td>${item.event_name}</td>
                                 <td>${item.description}</td>
                                 <td>${item.location}</td>
                                 <td>${item.skills}</td>
-                                <td>${eventDate.toLocaleDateString()}</td>
-                                <td>
-                                    <span class="status-circle" style="background-color: ${circleColor};"></span> 
-                                    ${status}
-                                </td> <!-- Status column with colored circle -->
+                                <td>${item.date}</td>
+                                <td><span class="status-circle" style="background-color: ${item.circleColor};"></span> ${item.status}</td>
                             </tr>
                         `;
                     }).join('');
+
                     setHistoryDisplay(`
                         <h2>History for ${selectedVolunteer}</h2>
                         <table>
@@ -76,23 +97,66 @@ const VolunteerHistory = () => {
                                     <th>Location</th>
                                     <th>Skills</th>
                                     <th>Date</th>
-                                    <th>Status</th> <!-- New header for status -->
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${tableRows}
+                                ${tableRowsHTML}
                             </tbody>
                         </table>
                     `);
+
+                    // Store the table rows for CSV/PDF generation
+                    setHistoryData(tableRows);
                 }
+
+                setHistoryViewed(true); // Set historyViewed to true after viewing history
             } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    setHistoryDisplay(`<h2>Volunteer Not Found</h2>`);
-                } else {
-                    setHistoryDisplay(`<h2>Error retrieving history</h2>`);
-                }
+                setHistoryDisplay(`<h2>Error retrieving history</h2>`);
             }
         }
+    };
+
+    // Generate CSV
+    const generateCSV = () => {
+        const csvData = historyData.map(item => ({
+            EventName: item.event_name,
+            Description: item.description,
+            Location: item.location,
+            Skills: item.skills,
+            Date: item.date,
+            Status: item.status,
+        }));
+        const csv = Papa.unparse(csvData);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${selectedVolunteer}_history.csv`;
+        link.click();
+    };
+
+    // Generate PDF
+    const generatePDF = () => {
+        const doc = new jsPDF();
+        doc.text(`Volunteer History for ${selectedVolunteer}`, 10, 10);
+
+        // Map the data into table-friendly format
+        const tableData = historyData.map(item => [
+            item.event_name,
+            item.description,
+            item.location,
+            item.skills,
+            item.date,
+            item.status
+        ]);
+
+        // Generate the table in the PDF
+        doc.autoTable({
+            head: [['Event Name', 'Description', 'Location', 'Skills', 'Date', 'Status']],
+            body: tableData
+        });
+
+        doc.save(`${selectedVolunteer}_history.pdf`);
     };
 
     const handleKeyDown = (e) => {
@@ -136,10 +200,41 @@ const VolunteerHistory = () => {
                 View History
             </button>
 
-            <div
-                id="history-display"
-                dangerouslySetInnerHTML={{ __html: historyDisplay }}
-            />
+            <div id="history-display" dangerouslySetInnerHTML={{ __html: historyDisplay }} />
+
+            {historyViewed && !showFormatDropdown && (
+                <button
+                    id="generate-file"
+                    onClick={() => setShowFormatDropdown(true)}
+                >
+                    Generate File
+                </button>
+            )}
+
+            {showFormatDropdown && (
+                <div>
+                    <label htmlFor="file-format">Select File Format:</label>
+                    <select
+                        id="file-format"
+                        value={fileFormat}
+                        onChange={(e) => setFileFormat(e.target.value)}
+                    >
+                        <option value="pdf">PDF</option>
+                        <option value="csv">CSV</option>
+                    </select>
+
+                    <button
+                        id="download-file"
+                        onClick={() => {
+                            console.log(fileFormat);  // Log the selected file format
+                            fileFormat === "pdf" ? generatePDF() : generateCSV();
+                        }}
+                        disabled={!historyData.length}
+                    >
+                        Download Report
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
